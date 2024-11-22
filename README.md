@@ -35,11 +35,13 @@
 
 ## 申请个人证书 / Apply New Certificate
 
-|            **CA机构<br/>Certificate Authority **             |                 **有效时间 <br/>Valid Time**                 | **邮件地址<br/>Email Address**                               | **国家<br/>Country**                                         | **省份<br/>State**                                           | **城市<br/>Location**                                        | **组织<br/>Organization**                                    | **组织单元<br/>Org Unit**                                    |                  **域名/IP<br/>Domain/IP**                   |                   **提交申请<br/>Submit**                    |
+|            **CA机构<br/>Certificate Authority **             |                 **有效时间 <br/>Valid Time**                 | **邮件地址<br/>Email Address**                               | **国家<br/>Country**                                         | **省份<br/>State**                                           | **城市<br/>Location**                                        | **组织<br/>Organization**                                    | **组织单元<br/>Org Unit**                                    |                 **备注信息<br/>Description**                 |                   **提交申请<br/>Submit**                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_mail" type="text"  name="in_mail"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_orgu" type="text" name="in_orgu" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
 
-**备注：证书主体名称(Common Name)无法自定义。Certificate’s Common Name cannot be customized.**
+**备注：证书主体名称（Common Name）无法自定义，将会使用备注信息（Description）区分和替代主体名称（Common Name）**
+
+**Certificate’s Common Name can NOT be customized on this Service, please fill in and use Description instead**.
 
 
 
@@ -89,6 +91,10 @@ function ca_post(parameters) {
   }
   if(in_orgu_txt.length<=0){
       window.alert("请填写您的部门\nPlease fill in your Organizational Unit.");
+      return False;
+  }
+  if(in_data_txt.length<=0){
+      window.alert("请填写备注信息\nPlease fill in your Description.");
       return False;
   }
   if(/^[A-Z]{2}$/.test(in_code_txt)){

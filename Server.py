@@ -26,6 +26,7 @@ class Server:
         cert.get_subject().OU = "Organizational Unit"
         cert.get_subject().CN = "Common Name"
         cert.get_subject().emailAddress  = "Common Name"
+        cert.get_subject().description = "Common Name"
         cert.set_serial_number(1000)
         cert.set_notBefore(b'20000101000000Z')
         cert.set_notAfter(b'20241231235959Z')
@@ -41,12 +42,12 @@ class Server:
             crypto.X509Extension(
                 b"extendedKeyUsage", True,
                 b"serverAuth,clientAuth"),
-            # crypto.X509Extension(
-            #     b"subjectAltName", False,
-            #     b"otherName:2.5.4.41;UTF8String:Name,otherName:2.5.4.13;UTF8String:Description"),
             crypto.X509Extension(
                 b"subjectAltName", False,
-                b"DNS:Name,URI:Description"),
+                b"DNS:domain"),
+            # crypto.X509Extension(
+            #     b"issuerAltName", False,
+            #     b"issuer:copy"),
             crypto.X509Extension(
                 b"crlDistributionPoints", False,
                 b"URI:https://pikachuim.github.io/testca/certs/codeca/codeca.crl,URI:https://test.certs.us.kg/certs/codeca/codeca.crl"),
