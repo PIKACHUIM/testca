@@ -25,17 +25,49 @@ class Server:
         cert.get_subject().O = "Organization"
         cert.get_subject().OU = "Organizational Unit"
         cert.get_subject().CN = "Common Name"
-        cert.get_subject().D = "Description"
-        cert.get_subject().N = "Name"
+        cert.get_subject().emailAddress  = "Common Name"
         cert.set_serial_number(1000)
         cert.set_notBefore(b'20000101000000Z')
         cert.set_notAfter(b'20241231235959Z')
         cert.set_issuer(cert.get_subject())
         cert.set_pubkey(key)
+        cert.add_extensions([
+            crypto.X509Extension(
+                b"basicConstraints",
+                True, b"CA:TRUE"),
+            crypto.X509Extension(
+                b"keyUsage", True,
+                b"digitalSignature, keyCertSign"),
+            crypto.X509Extension(
+                b"extendedKeyUsage", True,
+                b"serverAuth,clientAuth"),
+            # crypto.X509Extension(
+            #     b"subjectAltName", False,
+            #     b"otherName:2.5.4.41;UTF8String:Name,otherName:2.5.4.13;UTF8String:Description"),
+            crypto.X509Extension(
+                b"subjectAltName", False,
+                b"DNS:Name,URI:Description"),
+            crypto.X509Extension(
+                b"crlDistributionPoints", False,
+                b"URI:https://pikachuim.github.io/testca/certs/codeca/codeca.crl,URI:https://test.certs.us.kg/certs/codeca/codeca.crl"),
+            crypto.X509Extension(
+                b"authorityInfoAccess", False,
+                b"OCSP;URI:https://test.ocsps.us.kg/, caIssuers;URI:https://test.certs.us.kg/certs/codeca/codeca.crt, caIssuers;URI:https://pikachuim.github.io/testca/certs/codeca/codeca.crt"),
+            # crypto.X509Extension(
+            #     b"certificatePolicies", False,
+            #     b"1.2.4.5, 1.3.6.1.4.1.37476.9000.173.0;URI:https://test.certs.us.kg/"),
+            # crypto.X509Extension(
+            #     b"", False,
+            #     b""),
+            # crypto.X509Extension(
+            #     b"", False,
+            #     b""),
+        ])
+
         cert.sign(key, 'sha256')
-        with open('certificate.crt', 'w', encoding='utf8') as f:
+        with open('cache/certificate.crt', 'w', encoding='utf8') as f:
             f.write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert).decode('utf - 8'))
-        with open('private_key.pem', 'w') as f:
+        with open('cache/private_key.pem', 'w') as f:
             f.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key).decode('utf - 8'))
 
     @staticmethod
