@@ -21,9 +21,9 @@
 
 ## 根CA证书列表 / Root CA Information
 
-|                 通用名称(CN)/名称(Name)                  |                     组织（O）                     |                       组织机构（OU）                       |                     描述（Description）                      |                       证书策略（CPS）                        |       OCSP服务<br/>(OCSP)        |        吊销列表<br/>(CRL List)         |                   下载证书<br/>(Download)                    |
-| :------------------------------------------------------: | :-----------------------------------------------: | :--------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :------------------------------: | :------------------------------------: | :----------------------------------------------------------: |
-| **皮卡丘公共测试根RSA**<br/>Pikachu Public Test Root RSA | **皮卡丘信任网络CA**<br/>Pikachu Trust Network CA | **皮卡丘证书颁发机构**<br/>Pikachu Certification Authority | **皮卡丘公共服务测试根证书 RSA**<br/>Pikachu Public Test Root RSA | **PDF**：[中文](CPS-CN.pdf)  [English](CPS-EN.pdf)<br/>**TXT**：[中文](CPS-CN.html)  [English](CPS-EN.html) | [OCSP](https://test.ocsps.us.kg) | [2025 - 2050](certs/rootca/rootca.crl) | **[CER](certs/rootca/rootca.cer)**  / **[CRT](certs/rootca/rootca.crt)**  / **[DER](certs/rootca/rootca.der)** / **[P7B](certs/rootca/rootca.p7b)** |
+|                 通用名称(CN)/名称(Name)                  |                     组织（O）                     |                       组织机构（OU）                       |                     描述（Description）                      |                       证书策略（CPS）                        |       OCSP服务<br/>(OCSP)        |       吊销列表<br/>(CRL List)        |                   下载证书<br/>(Download)                    | 导入证书<br/>Setup CA  |
+| :------------------------------------------------------: | :-----------------------------------------------: | :--------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :------------------------------: | :----------------------------------: | :----------------------------------------------------------: | ---------------------- |
+| **皮卡丘公共测试根RSA**<br/>Pikachu Public Test Root RSA | **皮卡丘信任网络CA**<br/>Pikachu Trust Network CA | **皮卡丘证书颁发机构**<br/>Pikachu Certification Authority | **皮卡丘公共服务测试根证书 RSA**<br/>Pikachu Public Test Root RSA | **PDF**：[中文](CPS-CN.pdf)  [English](CPS-EN.pdf)<br/>**TXT**：[中文](CPS-CN.html)  [English](CPS-EN.html) | [OCSP](https://test.ocsps.us.kg) | [2025-2050](certs/rootca/rootca.crl) | **[CER](certs/rootca/rootca.cer)** **[CRT](certs/rootca/rootca.crt)** **[DER](certs/rootca/rootca.der)** **[P7B](certs/rootca/rootca.p7b)** | [Windows](Setupca.zip) |
 
 ## 中级证书列表 / Intermediate Sub CA
 
@@ -102,4 +102,3 @@ function ca_post(parameters) {
   }
 }
 </script>
-
