@@ -39,9 +39,9 @@
 | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_mail" type="text"  name="in_mail"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_orgu" type="text" name="in_orgu" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
 
-**备注：证书主体名称（Common Name）无法自定义，将会使用备注信息（Description）区分和替代主体名称（Common Name）**
+**备注：证书主体名称（Common Name）无法自定义，将会使用备注信息（Description）区分和替代主体名称（Common Name），证书一旦创建就无法吊销或撤回，私钥泄漏也没有办法禁用，请妥善保管您的证书私钥**
 
-**Certificate’s Common Name can NOT be customized on this Service, please fill in and use Description instead**.
+**Certificate’s Common Name can NOT be customized on this Service, please fill in and use Description instead. Once a cert is created, it cannot be revoked. Please keep your private key safe.**
 
 
 
@@ -104,4 +104,3 @@ function ca_post(parameters) {
   }
 }
 </script>
-
