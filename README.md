@@ -21,9 +21,9 @@
 
 ## 根CA证书列表 / Root CA Information
 
-|                 通用名称(CN)/名称(Name)                  |                     组织（O）                     |                       组织机构（OU）                       |                     描述（Description）                      |                       证书策略（CPS）                        |          OCSP服务<br/>(OCSP Server)          |           吊销列表<br/>(Revocation List)           |                 下载证书<br/>(Download Cert)                 |
-| :------------------------------------------------------: | :-----------------------------------------------: | :--------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :------------------------------------------: | :------------------------------------------------: | :----------------------------------------------------------: |
-| **皮卡丘公共测试根RSA**<br/>Pikachu Public Test Root RSA | **皮卡丘信任网络CA**<br/>Pikachu Trust Network CA | **皮卡丘证书颁发机构**<br/>Pikachu Certification Authority | **皮卡丘公共服务测试根证书 RSA**<br/>Pikachu Public Test Root RSA | **PDF**：[简体中文](CPS-CN.pdf)  [English](CPS-EN.pdf)<br/>**TXT**：[简体中文](CPS-CN.html)  [English](CPS-EN.html) | [test.ocsps.us.kg](https://test.ocsps.us.kg) | [2025/01/01 - 2050/01/01](certs/rootca/rootca.crl) | **[CER](certs/rootca/rootca.cer)**  / **[CRT](certs/rootca/rootca.crt)**  / **[DER](certs/rootca/rootca.der)** / **[P7B](certs/rootca/rootca.p7b)** |
+|                 通用名称(CN)/名称(Name)                  |                     组织（O）                     |                       组织机构（OU）                       |                     描述（Description）                      |                       证书策略（CPS）                        |       OCSP服务<br/>(OCSP)        |        吊销列表<br/>(CRL List)         |                   下载证书<br/>(Download)                    |
+| :------------------------------------------------------: | :-----------------------------------------------: | :--------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :------------------------------: | :------------------------------------: | :----------------------------------------------------------: |
+| **皮卡丘公共测试根RSA**<br/>Pikachu Public Test Root RSA | **皮卡丘信任网络CA**<br/>Pikachu Trust Network CA | **皮卡丘证书颁发机构**<br/>Pikachu Certification Authority | **皮卡丘公共服务测试根证书 RSA**<br/>Pikachu Public Test Root RSA | **PDF**：[中文](CPS-CN.pdf)  [English](CPS-EN.pdf)<br/>**TXT**：[中文](CPS-CN.html)  [English](CPS-EN.html) | [OCSP](https://test.ocsps.us.kg) | [2025 - 2050](certs/rootca/rootca.crl) | **[CER](certs/rootca/rootca.cer)**  / **[CRT](certs/rootca/rootca.crt)**  / **[DER](certs/rootca/rootca.der)** / **[P7B](certs/rootca/rootca.p7b)** |
 
 ## 中级证书列表 / Intermediate Sub CA
 
@@ -35,10 +35,11 @@
 
 ## 申请个人证书 / Apply New Certificate
 
-|             **CA机构 / Certificate Authority **              |                  **有效时间 / Valid Time**                   |      **主体附加信息 / Subject Additional Information**       |                    **提交申请 / Submit**                     |
-| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_data" type="text" name="in_data" style="width: 500px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
+|            **CA机构<br/>Certificate Authority **             |                 **有效时间 <br/>Valid Time**                 | **证书名称<br/>Cert Name**                                   | **国家<br/>Country**                                         | **省份<br/>State**                                           | **城市<br/>Location**                                        | **组织<br/>Organization**                                    | **组织单元<br/>Org Unit**                                    |                 **描述信息<br/>Description**                 |                   **提交申请<br/>Submit**                    |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_name" type="text"  name="in_name"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_orgu" type="text" name="in_orgu" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
 
+**备注：证书主体名称(Common Name)无法自定义。Certificate’s Common Name cannot be customized.**
 
 
 
@@ -47,9 +48,58 @@ function ca_post(parameters) {
   var ca_name_obj = document.getElementById("ca_name");
   var va_time_obj = document.getElementById("va_time");
   var in_data_obj = document.getElementById("in_data");
+  var in_code_obj = document.getElementById("in_code");
+  var in_main_obj = document.getElementById("in_main");
+  var in_subs_obj = document.getElementById("in_subs");
+  var in_orgs_obj = document.getElementById("in_orgs");
+  var in_orgu_obj = document.getElementById("in_orgu");
+  var in_name_obj = document.getElementById("in_name");
   var ca_name_txt = ca_name_obj.value;
   var va_time_txt = va_time_obj.value;
   var in_data_txt = in_data_obj.value;
-  window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt;
+  var in_code_txt = in_code_obj.value;
+  var in_main_txt = in_main_obj.value;
+  var in_subs_txt = in_subs_obj.value;
+  var in_orgs_txt = in_orgs_obj.value;
+  var in_orgu_txt = in_orgu_obj.value;
+  var in_name_txt = in_name_obj.value;
+  if(ca_name_txt.length<=0){
+      window.alert("请选择颁发机构\nPlease select the Certificate Authority.");
+      return False;
+  }
+  if(va_time_txt.length<=0){
+      window.alert("请选择有效时间\nPlease select an Valid Time.");
+      return False;
+  }
+  if(in_name_txt.length<=0){
+      window.alert("请填写证书名称\nPlease fill in the Cert Name.");
+      return False;
+  }
+  if(in_main_txt.length<=0){
+      window.alert("请填写所在省份\nPlease fill in the State where you are located.");
+      return False;
+  }
+  if(in_subs_txt.length<=0){
+      window.alert("请填写所在城市\nPlease fill in the Location where you are located.");
+      return False;
+  }
+  if(in_orgs_txt.length<=0){
+      window.alert("请填写您的组织\nPlease fill in your Organization.");
+      return False;
+  }
+  if(in_orgu_txt.length<=0){
+      window.alert("请填写您的部门\nPlease fill in your Organizational Unit.");
+      return False;
+  }
+  if(in_data_txt.length<=0){
+      window.alert("请填写描述信息\nPlease fill in your Description.");
+      return False;
+  }
+  if(/^[A-Z]{2}$/.test(in_code_txt)){
+      window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_orgu="+in_orgu_txt+"&in_name="+in_name_txt;
+  }else{
+      window.alert("国家字段必须是两位大写字母\nThe country must be two capital letters.");
+  }
 }
 </script>
+
