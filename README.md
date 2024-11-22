@@ -33,3 +33,23 @@
 |   **Pikachu UEFI Sub CA**   | **皮卡丘UEFI密钥交换证书中间CA (Pikachu UEFI Key Exchange CA)** | **[2025/01/01 - 2050/01/01](certs/uefica/uefica.crl)** | **[CER](certs/uefica/uefica.cer)  / [CRT](certs/uefica/uefica.crt)  / [DER](certs/uefica/uefica.der) / [P7B](certs/uefica/uefica.p7b)** |
 |   **Pikachu Code Sub CA**   | **皮卡丘公共测试代码证书中间CA (Pikachu Code Signning Sub CA)** |   [2025/01/01 - 2050/01/01](certs/codeca/codeca.crl)   | **[CER](certs/codeca/codeca.cer)**  / **[CRT](certs/codeca/codeca.crt)**  / **[DER](certs/codeca/codeca.der)** / **[P7B](certs/codeca/codeca.p7b)** |
 
+## 申请个人证书 / Apply New Certificate
+
+|             **CA机构 / Certificate Authority **              |                  **有效时间 / Valid Time**                   |      **主体附加信息 / Subject Additional Information**       |                    **提交申请 / Submit**                     |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_data" type="text" name="in_data" style="width: 500px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
+
+
+
+
+<script>
+function ca_post(parameters) {
+  var ca_name_obj = document.getElementById("ca_name");
+  var va_time_obj = document.getElementById("va_time");
+  var in_data_obj = document.getElementById("in_data");
+  var ca_name_txt = ca_name_obj.value;
+  var va_time_txt = va_time_obj.value;
+  var in_data_txt = in_data_obj.value;
+  window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt;
+}
+</script>

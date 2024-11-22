@@ -1,0 +1,567 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<style>
+@font-face {
+	font-family: "MapleMono SC NF Regular";
+	src: url("https://pikachuim.github.io/OpenFont/font/MapleMono/MapleMono-SC-NF/MapleMono-SC-NF-Regular.ttf") format("truetype");
+}
+
+*{
+	font-family: "MapleMono SC NF Regular";
+}</style>
+<style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; --title-bar-height:20px; }
+.mac-os-11 { --title-bar-height:28px; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4, h5 { white-space: pre-wrap; }
+body { margin: 0px; padding: 0px; height: auto; inset: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; overflow-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 36px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+.typora-export .task-list-item input { pointer-events: none; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; image-orientation: from-image; }
+button, input, select, textarea { color: inherit; font: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 4; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px; }
+thead, tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror-linenumber { user-select: none; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-fences-adv-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+svg { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li blockquote { margin: 1rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print {
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; font-variant-ligatures: no-common-ligatures; }
+  #write { margin-top: 0px; border-color: transparent !important; padding-top: 0px !important; padding-bottom: 0px !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  .typora-export #write { break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  .is-mac table { break-inside: avoid; }
+  #write > p:nth-child(1) { margin-top: 0px; }
+  .typora-export-show-outline .typora-export-sidebar { display: none; }
+  figure { overflow-x: visible; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+#write.first-line-indent p > .md-image:only-child:not(.md-img-error) img { left: -2em; position: relative; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+.MathJax_ref { fill: currentcolor; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus, [contenteditable="false"]:active, [contenteditable="false"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.reversefootnote { font-family: ui-monospace, sans-serif; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.6; font-family: var(--monospace); }
+code { text-align: left; vertical-align: initial; }
+a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+mark { background: rgb(255, 255, 0); color: rgb(0, 0, 0); }
+.md-html-inline .md-plain, .md-html-inline strong, mark .md-inline-math, mark strong { color: inherit; }
+.md-expand mark .md-meta { opacity: 0.3 !important; }
+mark .md-meta { color: rgb(0, 0, 0); }
+@media print {
+  .typora-export h1, .typora-export h2, .typora-export h3, .typora-export h4, .typora-export h5, .typora-export h6 { break-inside: avoid; }
+}
+.md-diagram-panel .messageText { stroke: none !important; }
+.md-diagram-panel .start-state { fill: var(--node-fill); }
+.md-diagram-panel .edgeLabel rect { opacity: 1 !important; }
+.md-fences.md-fences-math { font-size: 1em; }
+.md-fences-advanced:not(.md-focus) { padding: 0px; white-space: nowrap; border: 0px; }
+.md-fences-advanced:not(.md-focus) { background: inherit; }
+.typora-export-show-outline .typora-export-content { max-width: 1440px; margin: auto; display: flex; flex-direction: row; }
+.typora-export-sidebar { width: 300px; font-size: 0.8rem; margin-top: 80px; margin-right: 18px; }
+.typora-export-show-outline #write { --webkit-flex:2; flex: 2 1 0%; }
+.typora-export-sidebar .outline-content { position: fixed; top: 0px; max-height: 100%; overflow: hidden auto; padding-bottom: 30px; padding-top: 60px; width: 300px; }
+@media screen and (max-width: 1024px) {
+  .typora-export-sidebar, .typora-export-sidebar .outline-content { width: 240px; }
+}
+@media screen and (max-width: 800px) {
+  .typora-export-sidebar { display: none; }
+}
+.outline-content li, .outline-content ul { margin-left: 0px; margin-right: 0px; padding-left: 0px; padding-right: 0px; list-style: none; overflow-wrap: anywhere; }
+.outline-content ul { margin-top: 0px; margin-bottom: 0px; }
+.outline-content strong { font-weight: 400; }
+.outline-expander { width: 1rem; height: 1.42857rem; position: relative; display: table-cell; vertical-align: middle; cursor: pointer; padding-left: 4px; }
+.outline-expander::before { content: ""; position: relative; font-family: Ionicons; display: inline-block; font-size: 8px; vertical-align: middle; }
+.outline-item { padding-top: 3px; padding-bottom: 3px; cursor: pointer; }
+.outline-expander:hover::before { content: ""; }
+.outline-h1 > .outline-item { padding-left: 0px; }
+.outline-h2 > .outline-item { padding-left: 1em; }
+.outline-h3 > .outline-item { padding-left: 2em; }
+.outline-h4 > .outline-item { padding-left: 3em; }
+.outline-h5 > .outline-item { padding-left: 4em; }
+.outline-h6 > .outline-item { padding-left: 5em; }
+.outline-label { cursor: pointer; display: table-cell; vertical-align: middle; text-decoration: none; color: inherit; }
+.outline-label:hover { text-decoration: underline; }
+.outline-item:hover { border-color: rgb(245, 245, 245); background-color: var(--item-hover-bg-color); }
+.outline-item:hover { margin-left: -28px; margin-right: -28px; border-left: 28px solid transparent; border-right: 28px solid transparent; }
+.outline-item-single .outline-expander::before, .outline-item-single .outline-expander:hover::before { display: none; }
+.outline-item-open > .outline-item > .outline-expander::before { content: ""; }
+.outline-children { display: none; }
+.info-panel-tab-wrapper { display: none; }
+.outline-item-open > .outline-children { display: block; }
+.typora-export .outline-item { padding-top: 1px; padding-bottom: 1px; }
+.typora-export .outline-item:hover { margin-right: -8px; border-right: 8px solid transparent; }
+.typora-export .outline-expander::before { content: "+"; font-family: inherit; top: -1px; }
+.typora-export .outline-expander:hover::before, .typora-export .outline-item-open > .outline-item > .outline-expander::before { content: "−"; }
+.typora-export-collapse-outline .outline-children { display: none; }
+.typora-export-collapse-outline .outline-item-open > .outline-children, .typora-export-no-collapse-outline .outline-children { display: block; }
+.typora-export-no-collapse-outline .outline-expander::before { content: "" !important; }
+.typora-export-show-outline .outline-item-active > .outline-item .outline-label { font-weight: 700; }
+.md-inline-math-container mjx-container { zoom: 0.95; }
+mjx-container { break-inside: avoid; }
+
+
+/* 全局属性 */
+*{
+	font-family: "MapleMono SC NF Regular";
+}
+
+#write {
+  max-width: 2400px;
+  font-size: 1rem;
+  color: black;
+  padding: 0 10px;
+  line-height: 1.6;
+  word-spacing: 0px;
+  letter-spacing: 0px;
+  word-break: break-word;
+  word-wrap: break-word;
+  text-align: left;
+  font-family: 'MapleMono SC NF Regular', serif;
+}
+
+/*段落*/
+#write + p, 
+#write blockquote p {
+  font-size: 1rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  margin: 0;
+  line-height: 1.5rem;
+  color: black;
+}
+#write div[mdtype=toc] {
+  font-size: 1rem;
+}
+
+/*标题*/
+#write h1,
+#write h2,
+#write h3,
+#write h4,
+#write h5,
+#write h6 {
+  margin: 1.2em 0 1em;
+  padding: 0px;
+  font-weight: bold;
+  color: black;
+}
+#write h1 {
+  font-size: 1.5rem;
+}
+#write h2 {
+  font-size: 1.3rem;
+  border-bottom: 2px solid rgb(239, 112, 96);
+}
+#write h2 span {
+ display: inline-block;
+ font-weight: bold;
+ background: rgb(239, 112, 96);
+ color: #ffffff;
+ padding: 3px 10px 1px;
+ border-top-right-radius: 3px;
+ border-top-left-radius: 3px;
+ margin-right: 3px;
+}
+#write h2:after {
+ display: inline-block;
+ content: "";
+ vertical-align: bottom;
+ border-bottom: 1.25rem solid #efebe9;
+ border-right: 1.25rem solid transparent;
+}
+
+#write h3 {
+  font-size: 1.3rem;
+}
+#write h4 {
+  font-size: 1.2rem;
+}
+#write h5 {
+  font-size: 1.1rem;
+}
+#write h6 {
+  font-size: 1rem;
+}
+
+/*列表*/
+#write ul,
+#write ol {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding-left: 25px;
+  color: black;
+}
+#write ul {
+  list-style-type: disc;
+}
+#write ul ul {
+  list-style-type: square;
+}
+#write ol {
+  list-style-type: decimal;
+}
+#write li section {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  line-height: 1.7rem;
+  text-align: left;
+  color: rgb(1,1,1); /* 只要是纯黑色微信编辑器就会把color这个属性吞掉。。。*/
+  font-weight: 500;
+}
+
+/*引用*/
+#write blockquote {
+  display: block;
+  font-size: .9em;
+  overflow: auto;
+  border-left: 3px solid rgb(239, 112, 96);
+  color: #6a737d;
+  padding: 10px 10px 10px 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  background: #fff9f9;
+}
+
+/*链接*/
+#write a {
+  text-decoration: none;
+  word-wrap: break-word;
+  font-weight: bold;
+  border-bottom: 1px solid #1e6bb8;
+  color: rgb(239, 112, 96);
+  border-bottom: 1px solid rgb(239, 112, 96);
+}
+
+/*行内代码*/
+#write p code,
+#write li code {
+  font-size: .9rem;
+  word-wrap: break-word;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 0 2px;
+  color:  rgb(239, 112, 96);;
+  background-color: rgba(27,31,35,.05);
+  font-family: 'MapleMono SC NF Regular', monospace;
+  word-break: break-all;
+}
+
+/*图片*/
+#write img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+#write span img {
+  display: inline-block;
+  border-right: 0px;
+  border-left: 0px;
+}
+
+/*表格*/
+#write table {
+  display: table;
+  text-align: left;
+}
+#write tbody {
+  border: 0;
+}
+#write table tr {
+  border: 0;
+  border-top: 1px solid #ccc;
+  background-color: white;
+}
+#write table tr:nth-child(2n) {
+  background-color: #F8F8F8;
+}
+#write table tr th,
+#write table tr td {
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  text-align: left;
+}
+#write table tr th {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+/* 行内代码 */
+#write span code, #write li code {
+ color: rgb(239, 112, 96);
+}
+
+/* 脚注上标 */
+#write .md-footnote {
+ font-weight: bold;
+ color: rgb(239, 112, 96);
+}
+#write .md-footnote > .md-text:before {
+ content: '['
+}
+#write .md-footnote > .md-text:after {
+ content: ']'
+}
+
+/* 脚注 */
+#write .md-def-name {
+  padding-right: 1.8ch;
+}
+#write .md-def-name:before {
+  content: '[';
+  color: #000;
+}
+#write .md-def-name:after {
+  color: #000;
+}
+
+/* 代码块主题 */
+.md-fences:before {
+  content: ' ';
+  display: block;
+  width: 100%;
+  background-size: 40px;
+  background-repeat: no-repeat;
+  background-color: #282c34;
+  margin-bottom: -7px;
+  border-radius: 5px;
+  background-position: 10px 10px;
+}
+
+/* CodeMirror 相关内容 */
+.CodeMirror-wrap .CodeMirror-scroll {
+  overflow-x: auto;
+}
+.cm-s-inner.CodeMirror {
+  padding: .5rem;
+  background-color: #292d3e;
+  color: #a6accd;
+  font-family: 'MapleMono SC NF Regular', Consolas;
+  border-radius: 4px;
+}
+.cm-s-inner .cm-keyword {
+  color: #c792ea !important;
+}
+.cm-s-inner .cm-operator {
+  color: #89ddff !important;
+}
+.cm-s-inner .cm-variable-2 {
+  color: #eeffff !important;
+}
+.cm-s-inner .cm-variable-3,
+.cm-s-inner .cm-type {
+  color: #f07178 !important;
+}
+.cm-s-inner .cm-builtin {
+  color: #ffcb6b !important;
+}
+.cm-s-inner .cm-atom {
+  color: #f78c6c !important;
+}
+.cm-s-inner .cm-number {
+  color: #ff5370 !important;
+}
+.cm-s-inner .cm-def {
+  color: #82aaff !important;
+}
+.cm-s-inner .cm-string {
+  color: #c3e88d !important;
+}
+.cm-s-inner .cm-string-2 {
+  color: #f07178 !important;
+}
+.cm-s-inner .cm-comment {
+  color: #676e95 !important;
+}
+.cm-s-inner .cm-variable {
+  color: #f07178 !important;
+}
+.cm-s-inner .cm-tag {
+  color: #ff5370 !important;
+}
+.cm-s-inner .cm-meta {
+  color: #ffcb6b !important;
+}
+.cm-s-inner .cm-attribute {
+  color: #c792ea !important;
+}
+.cm-s-inner .cm-property {
+  color: #c792ea !important;
+}
+.cm-s-inner .cm-qualifier {
+  color: #decb6b !important;
+}
+.cm-s-inner .cm-variable-3,
+.cm-s-inner .cm-type {
+  color: #decb6b !important;
+}
+.cm-s-inner .cm-error {
+  color: rgba(255, 255, 255, 1) !important;
+  background-color: #ff5370 !important;
+}
+.cm-s-inner .CodeMirror-matchingbracket {
+  text-decoration: underline;
+  color: white !important;
+}
+.CodeMirror div.CodeMirror-cursor {
+  border-left: 1px solid rgb(239, 112, 96);
+  z-index: 3;
+}
+
+.cm-s-inner div.CodeMirror-selected {
+  background: rgba(167, 178, 189, 0.2) !important;
+}
+
+.cm-s-inner.CodeMirror-focused div.CodeMirror-selected {
+  background: rgba(167, 178, 189, 0.2) !important;
+}
+
+.cm-s-inner .CodeMirror-selected,
+.cm-s-inner .CodeMirror-selectedtext {
+  background-color: rgba(167, 178, 189, 0.0) !important;
+}
+
+.cm-s-inner .CodeMirror-line::-moz-selection,
+.cm-s-inner .CodeMirror-line > span::-moz-selection,
+.cm-s-inner .CodeMirror-line > span > span::-moz-selection {
+  background-color: rgba(167, 178, 189, 0.2);
+}
+
+.cm-s-inner .CodeMirror-line::selection,
+.cm-s-inner .CodeMirror-line > span::selection,
+.cm-s-inner .CodeMirror-line > span > span::selection {
+  background-color: rgba(167, 178, 189, 0.2);
+}
+
+
+
+</style><title>README</title>
+</head>
+<body class='typora-export os-windows'><div class='typora-export-content'>
+<div id='write'  class=' first-line-indent'><h1 id='皮卡丘公共服务测试根证书-rsa在线验证服务'><span>皮卡丘公共服务测试根证书 RSA在线验证服务</span></h1><h1 id='pikachu-public-test-root-rsa-online-service'><span>Pikachu Public Test Root RSA Online Service</span></h1><p>&nbsp;</p><h2 id='网站服务介绍--service-information'><span>网站服务介绍 / Service Information</span></h2><p><strong><span>皮卡丘公共服务测试根证书 RSA提供公共自签名代码签名、时间戳服务、UEFI固件认证签名、Windows驱动签名以及驱动签名策略自定义服务</span></strong></p><p><strong><span>Pikachu Public Service Test Root Certificate RSA provides public self signed code signature, timestamp service, UEFI firmware authentication signature, Windows driver signature, and driver signature policy customization service.</span></strong></p><h2 id='重要信息提示--significant-notices'><span>重要信息提示 / Significant Notices</span></h2><ul><li><p><strong><span>此CA机构签出的时间戳和证书不会校验真实性和申请来源身份，任何人均可以随意生成任意时间戳和未经验证的证书！！！</span></strong></p></li><li><p><strong><span>此CA机构签出的时间戳和证书仅用于测试用途，不应用于重要场合或者生产环境，未经验证的证书不应在实践中使用！！！</span></strong></p></li><li><p><strong><span>The timestamps and certificates signed out by this CA institution will not be verify. Anyone can generate any timestamp and unverified certificate at will</span></strong><span>.</span></p></li><li><p><strong><span>The timestamp and certificate issued by this CA organization are only for testing purposes and should not be used in important occasions or production environments. </span></strong></p></li></ul><h2 id='根ca证书列表--root-ca-information'><span>根CA证书列表 / Root CA Information</span></h2><figure class='table-figure'><table><thead><tr><th style='text-align:center;' ><span>通用名称(CN)/名称(Name)</span></th><th style='text-align:center;' ><span>组织（O）</span></th><th style='text-align:center;' ><span>组织机构（OU）</span></th><th style='text-align:center;' ><span>描述（Description）</span></th><th style='text-align:center;' ><span>证书策略（CPS）</span></th><th style='text-align:center;' ><span>OCSP服务</span><br/><span>(OCSP Server)</span></th><th style='text-align:center;' ><span>吊销列表</span><br/><span>(Revocation List)</span></th><th style='text-align:center;' ><span>下载证书</span><br/><span>(Download Cert)</span></th></tr></thead><tbody><tr><td style='text-align:center;' ><strong><span>皮卡丘公共测试根RSA</span></strong><br/><span>Pikachu Public Test Root RSA</span></td><td style='text-align:center;' ><strong><span>皮卡丘信任网络CA</span></strong><br/><span>Pikachu Trust Network CA</span></td><td style='text-align:center;' ><strong><span>皮卡丘证书颁发机构</span></strong><br/><span>Pikachu Certification Authority</span></td><td style='text-align:center;' ><strong><span>皮卡丘公共服务测试根证书 RSA</span></strong><br/><span>Pikachu Public Test Root RSA</span></td><td style='text-align:center;' ><strong><span>PDF</span></strong><span>：</span><a href='CPS-CN.pdf'><span>简体中文</span></a><span>  </span><a href='CPS-EN.pdf'><span>English</span></a><br/><strong><span>TXT</span></strong><span>：</span><a href='CPS-CN.html'><span>简体中文</span></a><span>  </span><a href='CPS-EN.html'><span>English</span></a></td><td style='text-align:center;' ><a href='https://test.ocsps.us.kg'><span>test.ocsps.us.kg</span></a></td><td style='text-align:center;' ><a href='certs/rootca/rootca.crl'><span>2025/01/01 - 2050/01/01</span></a></td><td style='text-align:center;' ><strong><a href='certs/rootca/rootca.cer'><span>CER</span></a></strong><span>  / </span><strong><a href='certs/rootca/rootca.crt'><span>CRT</span></a></strong><span>  / </span><strong><a href='certs/rootca/rootca.der'><span>DER</span></a></strong><span> / </span><strong><a href='certs/rootca/rootca.p7b'><span>P7B</span></a></strong></td></tr></tbody></table></figure><h2 id='中级证书列表--intermediate-sub-ca'><span>中级证书列表 / Intermediate Sub CA</span></h2><figure class='table-figure'><table><thead><tr><th style='text-align:center;' ><strong><span>通用名称(CN)/名称(Name)</span></strong></th><th style='text-align:center;' ><strong><span>描述（Description）</span></strong></th><th style='text-align:center;' ><strong><span>吊销列表</span><br/><span>(Revocation List)</span></strong></th><th style='text-align:center;' ><strong><span>证书下载</span></strong></th></tr></thead><tbody><tr><td style='text-align:center;' ><strong><span>Pikachu Time Sub CA</span></strong></td><td style='text-align:center;' ><strong><span>皮卡丘时间戳签署中间子证书CA (Pikachu Time Signning Sub CA)</span></strong></td><td style='text-align:center;' ><strong><a href='certs/timeca/timeca.crl'><span>2025/01/01 - 2050/01/01</span></a></strong></td><td style='text-align:center;' ><strong><a href='certs/timeca/timeca.cer'><span>CER</span></a><span>  / </span><a href='certs/timeca/timeca.crt'><span>CRT</span></a><span>  / </span><a href='certs/timeca/timeca.der'><span>DER</span></a><span> / </span><a href='certs/timeca/timeca.p7b'><span>P7B</span></a></strong></td></tr><tr><td style='text-align:center;' ><strong><span>Pikachu UEFI Sub CA</span></strong></td><td style='text-align:center;' ><strong><span>皮卡丘UEFI密钥交换证书中间CA (Pikachu UEFI Key Exchange CA)</span></strong></td><td style='text-align:center;' ><strong><a href='certs/uefica/uefica.crl'><span>2025/01/01 - 2050/01/01</span></a></strong></td><td style='text-align:center;' ><strong><a href='certs/uefica/uefica.cer'><span>CER</span></a><span>  / </span><a href='certs/uefica/uefica.crt'><span>CRT</span></a><span>  / </span><a href='certs/uefica/uefica.der'><span>DER</span></a><span> / </span><a href='certs/uefica/uefica.p7b'><span>P7B</span></a></strong></td></tr><tr><td style='text-align:center;' ><strong><span>Pikachu Code Sub CA</span></strong></td><td style='text-align:center;' ><strong><span>皮卡丘公共测试代码证书中间CA (Pikachu Code Signning Sub CA)</span></strong></td><td style='text-align:center;' ><a href='certs/codeca/codeca.crl'><span>2025/01/01 - 2050/01/01</span></a></td><td style='text-align:center;' ><strong><a href='certs/codeca/codeca.cer'><span>CER</span></a></strong><span>  / </span><strong><a href='certs/codeca/codeca.crt'><span>CRT</span></a></strong><span>  / </span><strong><a href='certs/codeca/codeca.der'><span>DER</span></a></strong><span> / </span><strong><a href='certs/codeca/codeca.p7b'><span>P7B</span></a></strong></td></tr></tbody></table></figure><h2 id='申请个人证书--apply-new-certificate'><span>申请个人证书 / Apply New Certificate</span></h2><figure class='table-figure'><table><thead><tr><th style='text-align:center;' ><strong><span>CA机构 / Certificate Authority </span></strong></th><th style='text-align:center;' ><strong><span>有效时间 / Valid Time</span></strong></th><th style='text-align:center;' ><strong><span>主体附加信息 / Subject Additional Information</span></strong></th><th style='text-align:center;' ><strong><span>提交申请 / Submit</span></strong></th></tr></thead><tbody><tr><td style='text-align:center;' ><select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time"><strong><span>Pikachu Time Sub CA</span></strong><span>（申请时间签名证书）</span></option><span> </span><option value="uefi"><strong><span>Pikachu UEFI Sub CA</span></strong><span>（申请UEFI签名证书）</span></option><option value="code"><strong><span>Pikachu Code Sub CA</span></strong><span>（申请时间代码证书）</span></option></select></td><td style='text-align:center;' ><select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1"><strong><span>2000/01/01~2024/12/31</span></strong></option><option value="2"><strong><span>2025/01/01~2049/12/31</span></strong></option><option value="3"><strong><span>2050/01/01~2074/12/31</span></strong></option><option value="4"><strong><span>2075/01/01~2099/12/31</span></strong></option></select></td><td style='text-align:center;' ><input id="in_data" type="text" name="in_data" style="width: 500px"></td><td style='text-align:center;' ><input type="button" value="确认申请(Submit)" onclick="ca_post()" /></td></tr></tbody></table></figure><p>&nbsp;</p><script>
+function ca_post(parameters) {
+  var ca_name_obj = document.getElementById("ca_name");
+  var va_time_obj = document.getElementById("va_time");
+  var in_data_obj = document.getElementById("in_data");
+  var ca_name_txt = ca_name_obj.value;
+  var va_time_txt = va_time_obj.value;
+  var in_data_txt = in_data_obj.value;
+  window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt;
+}
+</script></div></div>
+</body>
+</html>
