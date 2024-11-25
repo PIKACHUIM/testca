@@ -37,7 +37,7 @@
 
 |            **CA机构<br/>Certificate Authority **             |                 **有效时间 <br/>Valid Time**                 | **邮件地址<br/>Email Address**                               | **国家<br/>Country**                                         | **省份<br/>State**                                           | **城市<br/>Location**                                        | **组织<br/>Organization**                                    | **组织单元<br/>Org Unit**                                    |                 **备注信息<br/>Description**                 |                   **提交申请<br/>Submit**                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_mail" type="text"  name="in_mail"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_part" type="text" name="in_part" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
+| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_mail" type="text"  name="in_mail"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_part" type="text" name="in_part" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <div id="cap"></div><br/><input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
 
 **备注：证书主体名称（Common Name）无法自定义，将会使用备注信息（Description）区分和替代主体名称（Common Name），证书一旦创建就无法吊销或撤回，私钥泄漏也没有办法禁用，请妥善保管您的证书私钥**
 
@@ -45,7 +45,27 @@
 
 
 
+<script src="https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/v5/index.js" crossorigin="anonymous" id="dx-captcha-script"></script>
 <script>
+var captcha_txt = "";
+
+function openPopup() {
+  var newWindow = window.open("", "Captcha 人机验证", "width=400,height=200");
+  newWindow.document.write("<p>请完成人机验证</p>");
+  newWindow.document.write("<div id='cap'></div>");
+}
+
+function captcha(parameters) {
+    var myCaptcha = _dx.Captcha(document.getElementById('cap'), {
+        appId: 'b4f11125fb26b4fd3010ba2146cf36a7',
+        apiServer: 'https://cap.dingxiang-inc.com',
+        success: function (token) {
+            captcha_txt = token;
+            return token;
+        }
+	})
+}
+
 function ca_post(parameters) {
   var ca_name_obj = document.getElementById("ca_name");
   var va_time_obj = document.getElementById("va_time");
@@ -67,40 +87,56 @@ function ca_post(parameters) {
   var in_mail_txt = in_mail_obj.value;
   if(ca_name_txt.length<=0){
       window.alert("请选择颁发机构\nPlease select the Certificate Authority.");
-      return False;
+      return false;
   }
   if(va_time_txt.length<=0){
       window.alert("请选择有效时间\nPlease select an Valid Time.");
-      return False;
+      return false;
   }
   if(in_mail_txt.length<=0){
       window.alert("请填写邮件地址\nPlease fill in the Email Address.");
-      return False;
+      return false;
+  }
+  else{
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+      if (!regEmail.test(in_mail_txt)) {
+        window.alert("请正确填写邮件\nPlease check the Email Address.");
+        return false;
+      }
   }
   if(in_main_txt.length<=0){
       window.alert("请填写所在省份\nPlease fill in the State where you are located.");
-      return False;
+      return false;
   }
   if(in_subs_txt.length<=0){
       window.alert("请填写所在城市\nPlease fill in the Location where you are located.");
-      return False;
+      return false;
   }
   if(in_orgs_txt.length<=0){
       window.alert("请填写您的组织\nPlease fill in your Organization.");
-      return False;
+      return false;
   }
   if(in_part_txt.length<=0){
       window.alert("请填写您的部门\nPlease fill in your Organizational Unit.");
-      return False;
+      return false;
   }
   if(in_data_txt.length<=0){
       window.alert("请填写备注信息\nPlease fill in your Description.");
-      return False;
+      return false;
   }
-  if(/^[A-Z]{2}$/.test(in_code_txt)){
-      window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_part="+in_part_txt+"&in_mail="+in_mail_txt;
-  }else{
+  if(!(/^[A-Z]{2}$/.test(in_code_txt))){
       window.alert("国家字段必须是两位大写字母\nThe country must be two capital letters.");
+      return false;
+  }
+  if(captcha_txt.length<=0){
+      captcha();
+      return false;
+  }
+  else{
+      window.open("http://post.certs.us.kg/cert/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_part="+in_part_txt+"&in_mail="+in_mail_txt+"&captcha="+captcha_txt);
+      window.alert("您的证书请求已经提交到服务器，请检查新打开的网页并下载您的证书\n注意：服务器既不会保留您的私钥，也无法吊销证书，请妥善保管私钥\nYour certificate request has been submitted, check the new webpage. \nNote: The server will NOT retain the certificate private key after issued. \nCertificate cannot be revoked. PLEASE KEEP YOUR PRIVATE KEY SAFE!");
+      captcha_txt = "";
+      return true;
   }
 }
 </script>
