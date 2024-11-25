@@ -48,13 +48,11 @@
 <script src="https://cdn.dingxiang-inc.com/ctu-group/captcha-ui/v5/index.js" crossorigin="anonymous" id="dx-captcha-script"></script>
 <script>
 var captcha_txt = "";
-
 function openPopup() {
   var newWindow = window.open("", "Captcha 人机验证", "width=400,height=200");
   newWindow.document.write("<p>请完成人机验证</p>");
   newWindow.document.write("<div id='cap'></div>");
 }
-
 function captcha(parameters) {
     var myCaptcha = _dx.Captcha(document.getElementById('cap'), {
         appId: 'b4f11125fb26b4fd3010ba2146cf36a7',
@@ -65,7 +63,6 @@ function captcha(parameters) {
         }
 	})
 }
-
 function ca_post(parameters) {
   var ca_name_obj = document.getElementById("ca_name");
   var va_time_obj = document.getElementById("va_time");
