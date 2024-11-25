@@ -37,7 +37,7 @@
 
 |            **CA机构<br/>Certificate Authority **             |                 **有效时间 <br/>Valid Time**                 | **邮件地址<br/>Email Address**                               | **国家<br/>Country**                                         | **省份<br/>State**                                           | **城市<br/>Location**                                        | **组织<br/>Organization**                                    | **组织单元<br/>Org Unit**                                    |                 **备注信息<br/>Description**                 |                   **提交申请<br/>Submit**                    |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_mail" type="text"  name="in_mail"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_orgu" type="text" name="in_orgu" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
+| <select id="ca_name" name="ca_name" style="width: 370px" data-placeholder="选择项目" required><option value="time">**Pikachu Time Sub CA**（申请时间签名证书）</option> <option value="uefi">**Pikachu UEFI Sub CA**（申请UEFI签名证书）</option><option value="code">**Pikachu Code Sub CA**（申请时间代码证书）</option></select> | <select id="va_time" name="va_time" style="width: 220px" data-placeholder="选择项目" required><option value="1">**2000/01/01~2024/12/31**</option><option value="2">**2025/01/01~2049/12/31**</option><option value="3">**2050/01/01~2074/12/31**</option><option value="4">**2075/01/01~2099/12/31**</option></select> | <input id="in_mail" type="text"  name="in_mail"  style="width: 100px;text-align: center;"> | <input id="in_code" type="text" maxlength="2" name="in_code" placeholder="CN" value="CN"  style="width: 60px;text-align: center;"> | <input id="in_main" type="text" name="in_main" style="width: 100px"> | <input id="in_subs" type="text" name="in_subs" style="width: 100px"> | <input id="in_orgs" type="text" name="in_orgs" style="width: 100px"> | <input id="in_part" type="text" name="in_part" style="width: 100px"> | <input id="in_data" type="text" name="in_data" style="width: 200px"> | <input type="button" value="确认申请(Submit)" onclick="ca_post()" /> |
 
 **备注：证书主体名称（Common Name）无法自定义，将会使用备注信息（Description）区分和替代主体名称（Common Name），证书一旦创建就无法吊销或撤回，私钥泄漏也没有办法禁用，请妥善保管您的证书私钥**
 
@@ -54,7 +54,7 @@ function ca_post(parameters) {
   var in_main_obj = document.getElementById("in_main");
   var in_subs_obj = document.getElementById("in_subs");
   var in_orgs_obj = document.getElementById("in_orgs");
-  var in_orgu_obj = document.getElementById("in_orgu");
+  var in_part_obj = document.getElementById("in_part");
   var in_mail_obj = document.getElementById("in_mail");
   var ca_name_txt = ca_name_obj.value;
   var va_time_txt = va_time_obj.value;
@@ -63,7 +63,7 @@ function ca_post(parameters) {
   var in_main_txt = in_main_obj.value;
   var in_subs_txt = in_subs_obj.value;
   var in_orgs_txt = in_orgs_obj.value;
-  var in_orgu_txt = in_orgu_obj.value;
+  var in_part_txt = in_part_obj.value;
   var in_mail_txt = in_mail_obj.value;
   if(ca_name_txt.length<=0){
       window.alert("请选择颁发机构\nPlease select the Certificate Authority.");
@@ -89,7 +89,7 @@ function ca_post(parameters) {
       window.alert("请填写您的组织\nPlease fill in your Organization.");
       return False;
   }
-  if(in_orgu_txt.length<=0){
+  if(in_part_txt.length<=0){
       window.alert("请填写您的部门\nPlease fill in your Organizational Unit.");
       return False;
   }
@@ -98,9 +98,10 @@ function ca_post(parameters) {
       return False;
   }
   if(/^[A-Z]{2}$/.test(in_code_txt)){
-      window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_orgu="+in_orgu_txt+"&in_mail="+in_mail_txt;
+      window.location.href = "https://post.certs.us.kg/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_part="+in_part_txt+"&in_mail="+in_mail_txt;
   }else{
       window.alert("国家字段必须是两位大写字母\nThe country must be two capital letters.");
   }
 }
 </script>
+
