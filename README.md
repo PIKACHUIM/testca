@@ -1,4 +1,4 @@
-# 皮卡丘公共服务测试根证书 RSA在线验证服务
+# 皮卡丘公共测试根证书服务 RSA 在线验证服务
 
 # Pikachu Public Test Root RSA Online Service
 
@@ -41,7 +41,7 @@
 
 **备注：证书主体名称（Common Name）无法自定义，将会使用描述信息（Description）区分和替代主体名称（Common Name），证书一旦创建就无法吊销或撤回，私钥泄漏也没有办法禁用，请妥善保管您的证书私钥**
 
-**Certificate’s Common Name can NOT be customized on this Service, please fill in and use Description instead. Once a cert is created, it cannot be revoked. Please keep your private key safe.**
+**Certificate Common Name can NOT be customized on this Service, please fill in and use Description instead. Once a cert is created, it cannot be revoked. Please keep your private key safe.**
 
 **多个域名请使用半角英文逗号或分号进行分割，接受星号格式通配符域名。Please use half width commas or semicolons to separate multiple domain names, and accept all wildcard domains with asterisks.**
 
