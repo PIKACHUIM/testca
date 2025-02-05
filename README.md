@@ -43,7 +43,7 @@
 
 **Certificate Common Name can NOT be customized on this Service, please fill in and use Description instead. Once a cert is created, it cannot be revoked. Please keep your private key safe.**
 
-**多个域名请使用半角英文逗号或分号进行分割，接受星号格式通配符域名。Please use half width commas or semicolons to separate multiple domain names, and accept all wildcard domains with asterisks.**
+**多个域名请使用半角英文逗号或分号进行分割，接受格式通配符域名。Please use half width commas or semicolons to separate multiple domain names, and accept all wildcard domains with asterisks.**
 
 
 
