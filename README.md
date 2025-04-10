@@ -134,7 +134,7 @@ function ca_post(parameters) {
       return false;
   }
   else{
-      window.open("http://post.certs.us.kg/cert/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_part="+in_part_txt+"&in_mail="+in_mail_txt+"&in_coms="+in_coms_txt+"&captcha="+captcha_txt);
+      window.open("https://issuer.524228.xyz/cert/?ca_name="+ca_name_txt+"&va_time="+va_time_txt+"&in_data="+in_data_txt+"&in_code="+in_code_txt+"&in_main="+in_main_txt+"&in_subs="+in_subs_txt+"&in_orgs="+in_orgs_txt+"&in_part="+in_part_txt+"&in_mail="+in_mail_txt+"&in_coms="+in_coms_txt+"&captcha="+captcha_txt);
       window.alert("您的证书请求已经提交到服务器，请检查新打开的网页并下载您的证书\n注意：服务器既不会保留您的私钥，也无法吊销证书，请妥善保管私钥\nYour certificate request has been submitted, check the new webpage. \nNote: The server will NOT retain the certificate private key after issued. \nCertificate cannot be revoked. PLEASE KEEP YOUR PRIVATE KEY SAFE!");
       captcha_txt = "";
       return true;
