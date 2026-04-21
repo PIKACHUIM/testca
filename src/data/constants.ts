@@ -181,7 +181,7 @@ export const CERT_PRODUCTS: CertProduct[] = [
 ]
 
 export interface ValidRange {
-  value: '1' | '2' | '3' | '4' | '5'
+  value: '1' | '2' | '3' | '4' 
   label: string
 }
 

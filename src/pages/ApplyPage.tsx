@@ -103,6 +103,11 @@ const ApplyPage: React.FC = () => {
   const onSubmit = async () => {
     try {
       const values = await form.validateFields()
+      if (!VALID_RANGES.some((r) => r.value === values.va_time)) {
+        message.warning(t('apply.r.valid'))
+        setStep(0)
+        return
+      }
       if (!captchaToken) {
         message.warning(t('apply.captcha.req'))
         captchaInstance.current?.reload?.()
@@ -181,7 +186,7 @@ const ApplyPage: React.FC = () => {
           <Form<FormValues>
             form={form}
             layout="vertical"
-            initialValues={{ ca_name: 'time', va_time: '5', in_code: 'CN' }}
+            initialValues={{ ca_name: 'time', va_time: '2', in_code: 'CN' }}
             requiredMark="optional"
           >
             {/* Step 0 */}
