@@ -2,43 +2,42 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ConfigProvider, theme as antdTheme, App as AntdApp } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
+import enUS from 'antd/locale/en_US'
 import App from './App'
+import { I18nProvider, useI18n } from './i18n/I18nProvider'
+import { ThemeProvider, useTheme } from './theme/ThemeProvider'
 import './styles/global.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+const ThemedApp: React.FC = () => {
+  const { lang } = useI18n()
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
+
+  return (
     <ConfigProvider
-      locale={zhCN}
+      locale={lang === 'zh' ? zhCN : enUS}
       theme={{
-        algorithm: antdTheme.darkAlgorithm,
+        algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
         token: {
-          colorPrimary: '#ffd83d',
-          colorInfo: '#5ef7ff',
-          colorSuccess: '#b5ff4d',
-          colorError: '#ff4d57',
-          colorBgContainer: 'rgba(22, 25, 40, 0.7)',
-          colorBgElevated: '#1a1d2e',
-          colorBorder: 'rgba(255, 255, 255, 0.1)',
-          colorText: '#e8ecf4',
-          colorTextSecondary: '#a5aabb',
+          colorPrimary: isDark ? '#fbbf24' : '#eab308',
+          colorInfo: isDark ? '#06b6d4' : '#0891b2',
+          colorSuccess: isDark ? '#84cc16' : '#65a30d',
+          colorError: isDark ? '#ef4444' : '#dc2626',
+          colorBgContainer: isDark ? '#15171f' : '#ffffff',
+          colorBgElevated: isDark ? '#1b1e27' : '#ffffff',
+          colorBorder: isDark ? 'rgba(255,255,255,0.16)' : 'rgba(24,24,27,0.16)',
+          colorText: isDark ? '#ececef' : '#1a1a1a',
+          colorTextSecondary: isDark ? '#b5b8c0' : '#3f3f46',
           fontFamily:
-            "'Inter Tight', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif",
-          borderRadius: 10,
-          borderRadiusLG: 14,
+            "'Inter Tight', system-ui, -apple-system, 'Segoe UI', sans-serif",
+          borderRadius: 8,
+          borderRadiusLG: 12,
           controlHeight: 40,
         },
         components: {
           Button: {
             fontWeight: 600,
-            primaryColor: '#1a1200',
-          },
-          Input: {
-            colorBgContainer: 'rgba(255, 255, 255, 0.04)',
-            activeBorderColor: '#ffd83d',
-            hoverBorderColor: 'rgba(255, 216, 61, 0.5)',
-          },
-          Select: {
-            colorBgContainer: 'rgba(255, 255, 255, 0.04)',
+            primaryColor: isDark ? '#1a1200' : '#2d1d00',
           },
         },
       }}
@@ -47,5 +46,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <App />
       </AntdApp>
     </ConfigProvider>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <I18nProvider>
+        <ThemedApp />
+      </I18nProvider>
+    </ThemeProvider>
   </React.StrictMode>,
 )

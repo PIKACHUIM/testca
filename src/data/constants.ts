@@ -30,11 +30,11 @@ export const withBase = (p: string): string => {
 export const ROOT_CA: CaItem = {
   id: 'rootca',
   cn: '皮卡丘公共测试根 RSA',
-  cnEn: 'Pikachu Public Test Root RSA',
-  description: '皮卡丘信任网络 CA · 皮卡丘证书颁发机构（Root CA · 2025-2050）',
+  cnEn: 'Pikachu Test CA RSA',
+  description: '皮卡丘信任网络 CA · 皮卡丘证书颁发机构（Root CA · 2000-2100）',
   descriptionEn: 'Pikachu Trust Network CA · Root Certification Authority',
   dir: 'certs/rootca',
-  crlRange: '2025 — 2050',
+  crlRange: '2000 — 2100',
   crlFile: 'certs/rootca/rootca.crl',
   formats: ['cer', 'crt', 'der', 'p7b'],
   tone: 'root',
@@ -52,7 +52,7 @@ export const SUB_CAS: CaItem[] = [
     description: '皮卡丘时间戳签署中间子证书 CA，用于代码 / 文件时间戳服务。',
     descriptionEn: 'Intermediate CA for Time Stamping Authority (TSA).',
     dir: 'certs/timeca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/timeca/timeca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -64,7 +64,7 @@ export const SUB_CAS: CaItem[] = [
     description: '皮卡丘 UEFI 密钥交换证书中间 CA，用于固件 / 启动加载器签名。',
     descriptionEn: 'Intermediate CA for UEFI firmware / secure-boot signing.',
     dir: 'certs/uefica',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/uefica/uefica.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -76,7 +76,7 @@ export const SUB_CAS: CaItem[] = [
     description: '皮卡丘公共测试代码签名中间 CA，用于代码 / 驱动签名。',
     descriptionEn: 'Intermediate CA for Authenticode / driver signing.',
     dir: 'certs/codeca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/codeca/codeca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -88,7 +88,7 @@ export const SUB_CAS: CaItem[] = [
     description: '身份认证证书中间 CA（Client Auth）。',
     descriptionEn: 'Intermediate CA for client authentication certificates.',
     dir: 'certs/authca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/authca/authca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -100,7 +100,7 @@ export const SUB_CAS: CaItem[] = [
     description: '文件加密 / EFS 证书中间 CA。',
     descriptionEn: 'Intermediate CA for document / EFS encryption.',
     dir: 'certs/fileca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/fileca/fileca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -112,7 +112,7 @@ export const SUB_CAS: CaItem[] = [
     description: '电子邮件（S/MIME）签名加密中间 CA。',
     descriptionEn: 'Intermediate CA for S/MIME email certificates.',
     dir: 'certs/mailca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/mailca/mailca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -124,7 +124,7 @@ export const SUB_CAS: CaItem[] = [
     description: '双向 TLS（mTLS）服务端 / 客户端证书中间 CA。',
     descriptionEn: 'Intermediate CA for mutual-TLS server / client certs.',
     dir: 'certs/mtlsca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/mtlsca/mtlsca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -136,7 +136,7 @@ export const SUB_CAS: CaItem[] = [
     description: '文档 / PDF 数字签名证书中间 CA。',
     descriptionEn: 'Intermediate CA for document / PDF digital signatures.',
     dir: 'certs/signca',
-    crlRange: '2025/01/01 — 2050/01/01',
+    crlRange: '2000/01/01 — 2100/01/01',
     crlFile: 'certs/signca/signca.crl',
     formats: ['cer', 'crt', 'der', 'p7b'],
     tone: 'intermediate',
@@ -147,26 +147,46 @@ export const SUB_CAS: CaItem[] = [
 export interface CertProduct {
   value: 'time' | 'uefi' | 'code' | 'auth' | 'file' | 'mail' | 'mtls' | 'sign'
   label: string
-  hint: string
+  /** i18n key: prod.<value>.hint */
+  hintKey:
+    | 'prod.time.hint'
+    | 'prod.uefi.hint'
+    | 'prod.code.hint'
+    | 'prod.auth.hint'
+    | 'prod.file.hint'
+    | 'prod.mail.hint'
+    | 'prod.mtls.hint'
+    | 'prod.sign.hint'
+  /** i18n key: prod.<value>.use —— 用途详细说明 */
+  useKey:
+    | 'prod.time.use'
+    | 'prod.uefi.use'
+    | 'prod.code.use'
+    | 'prod.auth.use'
+    | 'prod.file.use'
+    | 'prod.mail.use'
+    | 'prod.mtls.use'
+    | 'prod.sign.use'
 }
 
 export const CERT_PRODUCTS: CertProduct[] = [
-  { value: 'time', label: 'Pikachu Time Sub CA', hint: '申请时间签名证书' },
-  { value: 'uefi', label: 'Pikachu UEFI Sub CA', hint: '申请 UEFI 签名证书' },
-  { value: 'code', label: 'Pikachu Code Sub CA', hint: '申请代码签名证书' },
-  { value: 'auth', label: 'Pikachu Auth Sub CA', hint: '申请身份认证证书' },
-  { value: 'file', label: 'Pikachu File Sub CA', hint: '申请文件加密证书' },
-  { value: 'mail', label: 'Pikachu Mail Sub CA', hint: '申请电子邮件证书' },
-  { value: 'mtls', label: 'Pikachu mTLS Sub CA', hint: '申请 SSL 验证证书' },
-  { value: 'sign', label: 'Pikachu Sign Sub CA', hint: '申请文件签名证书' },
+  { value: 'time', label: 'Pikachu Time Sub CA', hintKey: 'prod.time.hint', useKey: 'prod.time.use' },
+  { value: 'uefi', label: 'Pikachu UEFI Sub CA', hintKey: 'prod.uefi.hint', useKey: 'prod.uefi.use' },
+  { value: 'code', label: 'Pikachu Code Sub CA', hintKey: 'prod.code.hint', useKey: 'prod.code.use' },
+  { value: 'auth', label: 'Pikachu Auth Sub CA', hintKey: 'prod.auth.hint', useKey: 'prod.auth.use' },
+  { value: 'file', label: 'Pikachu File Sub CA', hintKey: 'prod.file.hint', useKey: 'prod.file.use' },
+  { value: 'mail', label: 'Pikachu Mail Sub CA', hintKey: 'prod.mail.hint', useKey: 'prod.mail.use' },
+  { value: 'mtls', label: 'Pikachu mTLS Sub CA', hintKey: 'prod.mtls.hint', useKey: 'prod.mtls.use' },
+  { value: 'sign', label: 'Pikachu Sign Sub CA', hintKey: 'prod.sign.hint', useKey: 'prod.sign.use' },
 ]
 
 export interface ValidRange {
-  value: '1' | '2' | '3' | '4'
+  value: '1' | '2' | '3' | '4' | '5'
   label: string
 }
 
 export const VALID_RANGES: ValidRange[] = [
+  { value: '5', label: '2000 — 2100' },
   { value: '1', label: '2000 — 2025' },
   { value: '2', label: '2025 — 2050' },
   { value: '3', label: '2050 — 2075' },

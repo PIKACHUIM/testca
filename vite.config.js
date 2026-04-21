@@ -2,20 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'node:fs';
 import path from 'node:path';
-// 要在构建时一同拷贝到 dist 根下的原有静态资产（保持原链接结构）
-var STATIC_ASSETS = [
-    'certs',
-    'CPS-CN.pdf',
-    'CPS-EN.pdf',
-    'CPS-CN.html',
-    'CPS-EN.html',
-    'CPS-CN.md',
-    'CPS-EN.md',
-    'Policy.html',
-    'Setupca.zip',
-    'LICENSE',
-    'legacy.html',
-];
+import { buildAll } from './build/buildPdfs';
+import { CPS_ZH, CPS_EN } from './src/docs/cps';
+import { PRIVACY_ZH, PRIVACY_EN } from './src/docs/privacy';
+import { LICENSE_ZH, LICENSE_EN } from './src/docs/license';
+/** 仅保留证书二进制 / 安装包等必须资源；老 HTML / legacy 页全部移除 */
+var STATIC_ASSETS = ['certs', 'Setupca.zip', 'UPDATE.bat', 'LICENSE'];
 function copyOriginalAssets() {
     return {
         name: 'copy-original-static-assets',
@@ -36,13 +28,31 @@ function copyOriginalAssets() {
         },
     };
 }
+/** 从 Markdown 源在构建时生成 CPS / Privacy / License 的 PDF + MD */
+function buildDocsPdfs() {
+    return {
+        name: 'build-docs-pdfs',
+        apply: 'build',
+        closeBundle: function () {
+            var outDir = path.join(process.cwd(), 'dist', 'docs');
+            buildAll([
+                { slug: 'cps-zh', source: CPS_ZH, subtitle: '证书策略声明 · CPS', cjk: true },
+                { slug: 'cps-en', source: CPS_EN, subtitle: 'Certification Practice Statement' },
+                { slug: 'privacy-zh', source: PRIVACY_ZH, subtitle: '隐私声明', cjk: true },
+                { slug: 'privacy-en', source: PRIVACY_EN, subtitle: 'Privacy Notice' },
+                { slug: 'license-zh', source: LICENSE_ZH, subtitle: '协议许可', cjk: true },
+                { slug: 'license-en', source: LICENSE_EN, subtitle: 'License' },
+            ], outDir);
+        },
+    };
+}
 // https://vitejs.dev/config/
 // GitHub Pages 部署：仓库名 testca（参见 user rule），若自定义域名或 user-site 请改为 '/'
 export default defineConfig(function (_a) {
     var command = _a.command;
     return ({
         base: command === 'build' ? '/testca/' : '/',
-        plugins: [react(), copyOriginalAssets()],
+        plugins: [react(), copyOriginalAssets(), buildDocsPdfs()],
         server: {
             port: 5173,
             host: true,
