@@ -186,7 +186,6 @@ export interface ValidRange {
 }
 
 export const VALID_RANGES: ValidRange[] = [
-  { value: '5', label: '2000 — 2100' },
   { value: '1', label: '2000 — 2025' },
   { value: '2', label: '2025 — 2050' },
   { value: '3', label: '2050 — 2075' },

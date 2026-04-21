@@ -47,11 +47,11 @@ function buildDocsPdfs() {
     };
 }
 // https://vitejs.dev/config/
-// GitHub Pages 部署：仓库名 testca（参见 user rule），若自定义域名或 user-site 请改为 '/'
+// 使用自定义域名（CNAME：gh-tca.opkg.cn）部署到站点根目录，base 固定为 '/'
 export default defineConfig(function (_a) {
     var command = _a.command;
     return ({
-        base: command === 'build' ? '/testca/' : '/',
+        base: '/',
         plugins: [react(), copyOriginalAssets(), buildDocsPdfs()],
         server: {
             port: 5173,
