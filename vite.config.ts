@@ -8,7 +8,7 @@ import { PRIVACY_ZH, PRIVACY_EN } from './src/docs/privacy'
 import { LICENSE_ZH, LICENSE_EN } from './src/docs/license'
 
 /** 仅保留证书二进制 / 安装包等必须资源；老 HTML / legacy 页全部移除 */
-const STATIC_ASSETS = ['certs', 'Setupca.zip', 'UPDATE.bat', 'LICENSE']
+const STATIC_ASSETS = ['certs', 'Setupca.zip', 'UPDATE.bat', 'LICENSE', 'CNAME']
 
 function copyOriginalAssets(): Plugin {
   return {
@@ -25,6 +25,48 @@ function copyOriginalAssets(): Plugin {
       }
       // GitHub Pages: 防止 Jekyll 处理下划线/特殊路径
       fs.writeFileSync(path.join(dist, '.nojekyll'), '')
+
+      // ------------------------------------------------------------------
+      // Cloudflare Pages / 通用静态托管兼容：
+      //   1) _redirects —— SPA 路由回退，避免子路径刷新后请求 hash 资源
+      //      被 404 页拦截从而返回 application/octet-stream 的 MIME。
+      //   2) _headers   —— 强制 JS / MJS / CSS / WASM 的 Content-Type，
+      //      彻底修复浏览器严格 MIME 校验下的
+      //      "Expected a JavaScript-or-Wasm module script but the server
+      //      responded with a MIME type of application/octet-stream" 报错。
+      //   3) 404.html   —— GitHub Pages / 其它静态托管下刷新子路径的兜底。
+      // ------------------------------------------------------------------
+      const redirects = [
+        '# Cloudflare Pages SPA fallback',
+        '/*    /index.html   200',
+        '',
+      ].join('\n')
+      fs.writeFileSync(path.join(dist, '_redirects'), redirects)
+
+      const headers = [
+        '# 静态资源默认强缓存（Vite 产物带内容 hash）',
+        '/assets/*',
+        '  Cache-Control: public, max-age=31536000, immutable',
+        '',
+        '# 显式声明 JS / MJS 的 MIME，避免 Cloudflare Pages 返回 octet-stream',
+        '/*.js',
+        '  Content-Type: application/javascript; charset=utf-8',
+        '/*.mjs',
+        '  Content-Type: application/javascript; charset=utf-8',
+        '/*.css',
+        '  Content-Type: text/css; charset=utf-8',
+        '/*.wasm',
+        '  Content-Type: application/wasm',
+        '/*.map',
+        '  Content-Type: application/json; charset=utf-8',
+        '',
+      ].join('\n')
+      fs.writeFileSync(path.join(dist, '_headers'), headers)
+
+      const indexHtml = path.join(dist, 'index.html')
+      if (fs.existsSync(indexHtml)) {
+        fs.copyFileSync(indexHtml, path.join(dist, '404.html'))
+      }
     },
   }
 }
