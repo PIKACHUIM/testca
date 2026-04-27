@@ -25,36 +25,8 @@ function copyOriginalAssets() {
             }
             // GitHub Pages: 防止 Jekyll 处理下划线/特殊路径
             fs.writeFileSync(path.join(dist, '.nojekyll'), '');
-            // Cloudflare Pages SPA fallback：避免子路径刷新命中 404 页导致
-            // module 资源以 application/octet-stream 返回。
-            var redirects = [
-                '# Cloudflare Pages SPA fallback',
-                '/*    /index.html   200',
-                '',
-            ].join('\n');
-            fs.writeFileSync(path.join(dist, '_redirects'), redirects);
-            // 强制声明 JS / MJS / CSS / WASM 的 Content-Type，修复
-            // "Expected a JavaScript-or-Wasm module script but the server
-            //  responded with a MIME type of application/octet-stream"。
-            var headers = [
-                '# 静态资源默认强缓存（Vite 产物带内容 hash）',
-                '/assets/*',
-                '  Cache-Control: public, max-age=31536000, immutable',
-                '',
-                '# 显式声明 JS / MJS 的 MIME，避免 Cloudflare Pages 返回 octet-stream',
-                '/*.js',
-                '  Content-Type: application/javascript; charset=utf-8',
-                '/*.mjs',
-                '  Content-Type: application/javascript; charset=utf-8',
-                '/*.css',
-                '  Content-Type: text/css; charset=utf-8',
-                '/*.wasm',
-                '  Content-Type: application/wasm',
-                '/*.map',
-                '  Content-Type: application/json; charset=utf-8',
-                '',
-            ].join('\n');
-            fs.writeFileSync(path.join(dist, '_headers'), headers);
+            // _headers / _redirects 由 public/_headers、public/_redirects 提供，
+            // Vite 会在构建时自动拷贝到 dist/ 根，此处不重复写入，避免双份定义。
             var indexHtml = path.join(dist, 'index.html');
             if (fs.existsSync(indexHtml)) {
                 fs.copyFileSync(indexHtml, path.join(dist, '404.html'));

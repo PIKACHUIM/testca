@@ -1,0 +1,25 @@
+# 注意：此文件用于防御"Cloudflare Pages 被错误配置为直接服务仓库根目录"的场景。
+# 正常情况下，构建输出目录应设置为 dist/，届时真正生效的是 public/_headers（拷贝到 dist/_headers）。
+# 保留此根目录副本作为兜底，避免极端配置错误下 MIME 报错继续出现。
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Content-Type: application/javascript; charset=utf-8
+  X-Content-Type-Options: nosniff
+/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+  X-Content-Type-Options: nosniff
+/*.jsx
+  Content-Type: application/javascript; charset=utf-8
+/*.ts
+  Content-Type: application/javascript; charset=utf-8
+/*.tsx
+  Content-Type: application/javascript; charset=utf-8
+/*.css
+  Content-Type: text/css; charset=utf-8
+/*.wasm
+  Content-Type: application/wasm
+/*.svg
+  Content-Type: image/svg+xml

@@ -1,0 +1,5 @@
+# Cloudflare Pages: SPA 回退路由
+# 所有未匹配到静态文件的路径，都回退到 index.html，由前端 hashRouter 处理
+# 使用 200 状态码（内部 rewrite，不改变浏览器 URL）
+
+/*    /index.html   200

@@ -1,0 +1,4 @@
+# 防御：Cloudflare Pages 配置错误时（如直接服务仓库根）的 SPA fallback。
+# 正常构建场景下真正生效的是 public/_redirects → dist/_redirects。
+
+/*    /index.html   200
