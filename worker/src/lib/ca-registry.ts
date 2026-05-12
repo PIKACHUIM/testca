@@ -19,6 +19,13 @@ export const CA_NAMES = [
   "mail",
   "mtls",
   "sign",
+  "ssh2",
+  "acme",
+  "ssl3",
+  "iots",
+  "nets",
+  "card",
+  "fido",
 ] as const;
 export type CaName = (typeof CA_NAMES)[number];
 
@@ -192,6 +199,68 @@ export const CA_PROFILES: Record<CaName, CaProfile> = {
       "1.3.6.1.4.1.311.10.3.1",
       "1.3.6.1.4.1.311.10.3.2",
       "1.3.6.1.4.1.311.10.3.13",
+    ],
+  },
+  ssh2: {
+    keyUsage: ["digitalSignature"],
+    extKeyUsage: [
+      "1.3.6.1.5.5.7.3.21", // id-kp-secureShellClient
+      "1.3.6.1.5.5.7.3.22", // id-kp-secureShellServer
+    ],
+  },
+  acme: {
+    keyUsage: ["digitalSignature", "keyEncipherment"],
+    extKeyUsage: [
+      "1.3.6.1.5.5.7.3.1", // id-kp-serverAuth
+      "1.3.6.1.5.5.7.3.2", // id-kp-clientAuth
+    ],
+  },
+  ssl3: {
+    keyUsage: ["digitalSignature", "keyEncipherment", "keyAgreement"],
+    extKeyUsage: [
+      "1.3.6.1.5.5.7.3.1", // id-kp-serverAuth
+      "1.3.6.1.5.5.7.3.2", // id-kp-clientAuth
+    ],
+  },
+  iots: {
+    keyUsage: ["digitalSignature", "keyEncipherment", "dataEncipherment"],
+    extKeyUsage: [
+      "1.3.6.1.5.5.7.3.2", // id-kp-clientAuth
+      "1.3.6.1.5.5.7.3.1", // id-kp-serverAuth
+      "1.3.6.1.5.5.7.3.3", // id-kp-codeSigning (固件签名)
+    ],
+  },
+  nets: {
+    keyUsage: ["digitalSignature", "keyEncipherment", "keyAgreement"],
+    extKeyUsage: [
+      "1.3.6.1.5.5.7.3.1", // id-kp-serverAuth
+      "1.3.6.1.5.5.7.3.2", // id-kp-clientAuth
+      "1.3.6.1.5.5.8.2.2", // id-kp-ipsecProtection (IPSec)
+      "1.3.6.1.5.5.7.3.5", // id-kp-ipsecEndSystem
+      "1.3.6.1.5.5.7.3.6", // id-kp-ipsecTunnel
+      "1.3.6.1.5.5.7.3.7", // id-kp-ipsecUser
+    ],
+  },
+  card: {
+    keyUsage: [
+      "digitalSignature",
+      "nonRepudiation",
+      "keyEncipherment",
+      "dataEncipherment",
+    ],
+    extKeyUsage: [
+      "1.3.6.1.4.1.311.20.2.2", // id-kp-smartcardLogon
+      "1.3.6.1.5.5.7.3.2",      // id-kp-clientAuth
+      "1.3.6.1.5.5.7.3.4",      // id-kp-emailProtection
+      "1.3.6.1.4.1.311.10.3.11", // id-kp-keyRecovery
+    ],
+  },
+  fido: {
+    keyUsage: ["digitalSignature"],
+    extKeyUsage: [
+      "1.3.6.1.5.5.7.3.2",        // id-kp-clientAuth
+      "1.2.840.113549.1.9.2",      // FIDO U2F
+      "1.3.6.1.4.1.45724.1.1.4",   // FIDO2 hmac-secret
     ],
   },
 };

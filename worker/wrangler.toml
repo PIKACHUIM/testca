@@ -31,6 +31,13 @@ FILE_CA_KEY = ""
 MAIL_CA_KEY = ""
 MTLS_CA_KEY = ""
 SIGN_CA_KEY = ""
+SSH2_CA_KEY = ""
+ACME_CA_KEY = ""
+SSL3_CA_KEY = ""
+IOTS_CA_KEY = ""
+NETS_CA_KEY = ""
+CARD_CA_KEY = ""
+FIDO_CA_KEY = ""
 OCSP_CA_KEY = ""
 
 [dev]

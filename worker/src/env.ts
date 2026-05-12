@@ -28,6 +28,13 @@ export interface Env {
   MAIL_CA_KEY?: string;
   MTLS_CA_KEY?: string;
   SIGN_CA_KEY?: string;
+  SSH2_CA_KEY?: string;
+  ACME_CA_KEY?: string;
+  SSL3_CA_KEY?: string;
+  IOTS_CA_KEY?: string;
+  NETS_CA_KEY?: string;
+  CARD_CA_KEY?: string;
+  FIDO_CA_KEY?: string;
   OCSP_CA_KEY?: string;
 
   // ===== Cloudflare Turnstile（唯一的人机验证） =====

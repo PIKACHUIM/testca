@@ -45,7 +45,7 @@ const SubCaPage: React.FC = () => {
         }
       />
 
-      <div className="grid grid--auto">
+      <div className="grid grid--5">
         {list.map((c) => (
           <CaCard key={c.id} item={c} />
         ))}
