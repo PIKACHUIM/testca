@@ -203,3 +203,14 @@ export const ISSUER_ENDPOINT = '/cert/'
  */
 export const REVOKE_ENDPOINT = '/revoke'
 
+/**
+ * TPM 虚拟智能卡证书分发接口（同站部署时均为相对路径）。
+ * 服务端实现见 worker/src/routes/card.ts。
+ */
+export const CARD_PUT_ENDPOINT = '/card/put/cert'
+export const CARD_STATUS_ENDPOINT = '/card/status'
+export const CARD_ADMIN_LIST_ENDPOINT = '/card/admin/list'
+export const CARD_ADMIN_DELETE_ENDPOINT = '/card/admin/delete'
+/** 服务端渲染的上传页：供智能卡工具 / 无 JS 环境直接打开 */
+export const CARD_WEB_PAGE = '/card/web/cert'
+

@@ -6,6 +6,7 @@ import RootCaPage from './pages/RootCaPage'
 import SubCaPage from './pages/SubCaPage'
 import ApplyPage from './pages/ApplyPage'
 import RevokePage from './pages/RevokePage'
+import CardCertPage from './pages/CardCertPage'
 import DocsPage from './pages/DocsPage'
 import CpsPage from './pages/CpsPage'
 import PrivacyPage from './pages/PrivacyPage'
@@ -25,6 +26,8 @@ const App: React.FC = () => {
         return <ApplyPage />
       case 'revoke':
         return <RevokePage />
+      case 'card':
+        return <CardCertPage />
       case 'docs':
         return <DocsPage onNav={nav} />
       case 'cps':

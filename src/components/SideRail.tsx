@@ -5,6 +5,7 @@ import {
   ApartmentOutlined,
   ThunderboltFilled,
   StopOutlined,
+  IdcardOutlined,
   ReadOutlined,
   FileProtectOutlined,
   LockOutlined,
@@ -36,20 +37,29 @@ const GROUPS: Group[] = [
       { key: 'sub', icon: <ApartmentOutlined />, labelKey: 'rail.sub', kbd: '3' },
       { key: 'apply', icon: <ThunderboltFilled />, labelKey: 'rail.apply', kbd: '4' },
       { key: 'revoke', icon: <StopOutlined />, labelKey: 'rail.revoke', kbd: '5' },
-      { key: 'docs', icon: <ReadOutlined />, labelKey: 'rail.docs', kbd: '6' },
+      { key: 'card', icon: <IdcardOutlined />, labelKey: 'rail.card', kbd: '6' },
+      { key: 'docs', icon: <ReadOutlined />, labelKey: 'rail.docs', kbd: '7' },
     ],
   },
   {
     headerKey: 'rail.group.legal',
     items: [
-      { key: 'cps', icon: <FileProtectOutlined />, labelKey: 'rail.cps', kbd: '7' },
-      { key: 'privacy', icon: <LockOutlined />, labelKey: 'rail.privacy', kbd: '8' },
-      { key: 'license', icon: <FileTextOutlined />, labelKey: 'rail.license', kbd: '9' },
+      { key: 'cps', icon: <FileProtectOutlined />, labelKey: 'rail.cps', kbd: '8' },
+      { key: 'privacy', icon: <LockOutlined />, labelKey: 'rail.privacy', kbd: '9' },
+      { key: 'license', icon: <FileTextOutlined />, labelKey: 'rail.license', kbd: '0' },
     ],
   },
 ]
 
 const FLAT: Item[] = GROUPS.flatMap((g) => g.items)
+
+/**
+ * 快捷键按「徽标数字」映射到页面，而不是数组下标 ——
+ * 这样后续插入/调整菜单项不会让已标注的 1..9 错位。
+ */
+const KBD_MAP = new Map<string, PageKey>(
+  FLAT.filter((it) => !!it.kbd).map((it) => [it.kbd as string, it.key]),
+)
 
 interface Props {
   active: PageKey
@@ -65,8 +75,8 @@ const SideRail: React.FC<Props> = ({ active, onNav }) => {
         const tag = e.target.tagName
         if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return
       }
-      const n = parseInt(e.key, 10)
-      if (n >= 1 && n <= FLAT.length) onNav(FLAT[n - 1].key)
+      const target = KBD_MAP.get(e.key)
+      if (target) onNav(target)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
