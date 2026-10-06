@@ -32,11 +32,12 @@ ocspRoutes.get("/:b64{.+}", async (c) => {
     try {
       buf = fromBase64Url(b64.replace(/=/g, ""));
     } catch {
-      return c.body(
-        buildStatusOnlyOcspResponse(OCSPResponseStatus.malformedRequest),
-        200,
-        { "Content-Type": "application/ocsp-response" },
+      // 注：TS 5.7+ 下 Hono 的 c.body 要求 Uint8Array<ArrayBuffer>，而函数返回
+      // 的是 Uint8Array<ArrayBufferLike>（仅类型不兼容，运行期无差别）。
+      const der: any = buildStatusOnlyOcspResponse(
+        OCSPResponseStatus.malformedRequest,
       );
+      return c.body(der, 200, { "Content-Type": "application/ocsp-response" });
     }
   }
   return respond(c, buf);

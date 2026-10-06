@@ -35,6 +35,20 @@ export function fromBase64(b64: string): Uint8Array {
   return out;
 }
 
+/**
+ * 收窄为 WebCrypto / asn1js / pkijs 所需的 `BufferSource`。
+ *
+ * TS 5.7+ 起 `Uint8Array`/`ArrayBuffer` 带 `ArrayBufferLike` 泛型
+ * （可能是 SharedArrayBuffer），而 WebCrypto 的 `BufferSource` 要求
+ * `ArrayBufferView<ArrayBuffer>`，两者不兼容；但运行期值始终是普通
+ * ArrayBuffer/视图，这里仅做类型收窄，不产生任何运行时开销。
+ */
+export function asBufferSource(
+  data: ArrayBufferLike | ArrayBufferView,
+): BufferSource {
+  return data as unknown as BufferSource;
+}
+
 export function fromBase64Url(b64url: string): Uint8Array {
   const pad = "=".repeat((4 - (b64url.length % 4)) % 4);
   const b64 = (b64url + pad).replace(/-/g, "+").replace(/_/g, "/");
@@ -71,6 +85,6 @@ export async function sha256Hex(
   data: ArrayBuffer | Uint8Array,
 ): Promise<string> {
   const buf = data instanceof Uint8Array ? data : new Uint8Array(data);
-  const digest = await crypto.subtle.digest("SHA-256", buf);
+  const digest = await crypto.subtle.digest("SHA-256", asBufferSource(buf));
   return toHex(digest);
 }

@@ -32,5 +32,7 @@ worker/wrangler.encrypt.toml
 build
 worker/.wrangler
 worker/src/__tests__
+# 临时验证目录（探针 / 端到端脚本，保留但不入库）
+worker/.tmp*/
 tsconfig.node.tsbuildinfo
 tsconfig.tsbuildinfo

@@ -11,6 +11,25 @@
 export interface Env {
   CERT_KV: KVNamespace;
 
+  // ===== TPM 智能卡证书分发（Card Vault） =====
+  /**
+   * 智能卡分发密文的专用 KV 命名空间（可选）。
+   * 未配置时自动复用 `CERT_KV`（记录以 `card:v1:` 前缀隔离）。
+   */
+  CARD_KV?: KVNamespace;
+  /** 分发记录保留秒数（默认 604800 = 7 天；0 表示永不过期） */
+  CARD_TTL_SECONDS?: string;
+  /** 单个 PFX 大小上限（字节，默认 8388608 = 8 MiB） */
+  CARD_MAX_BYTES?: string;
+  /**
+   * 可选：用该口令派生 AES-256-GCM 密钥，对 KV 中的 PFX 密码做静态加密。
+   * 建议用 `wrangler secret put CARD_MASTER_KEY` 配置；一旦启用/更换，
+   * 旧的未加密记录仍可读取，但已加密记录必须用同一口令才能解开。
+   */
+  CARD_MASTER_KEY?: string;
+  /** 可选：`/card/admin/*` 管理接口令牌（未配置则管理接口禁用） */
+  CARD_ADMIN_TOKEN?: string;
+
   /**
    * Cloudflare Workers Static Assets 绑定，由 wrangler.toml 的 [assets] 自动生成。
    * 用于在同一个 Worker 内同时托管前端 SPA 与后端 API。

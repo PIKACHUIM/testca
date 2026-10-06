@@ -18,6 +18,7 @@ import {
   type CaName,
 } from "./ca-registry";
 import { getCert } from "./kv";
+import { asBufferSource } from "./bytes";
 import type { Env } from "../env";
 
 // 确保 pkijs 引擎已注册
@@ -57,7 +58,7 @@ export async function buildOcspResponse(
       reqDer.byteOffset,
       reqDer.byteOffset + reqDer.byteLength,
     );
-    const asn = asn1js.fromBER(src);
+    const asn = asn1js.fromBER(asBufferSource(src));
     if (asn.offset === -1) throw new Error("asn1 parse error");
     ocspReq = new pkijs.OCSPRequest({ schema: asn.result });
   } catch (e) {

@@ -14,6 +14,9 @@
 | OCSP (RFC 6960) | `POST /ocsp`、`GET /ocsp/:b64` | 返回 DER 编码 OCSP Response |
 | CRL  (RFC 5280) | `GET /crl/<caName>.crl`（也兼容 `<caName>ca.crl`） | 实时聚合 KV 中已吊销项 |
 | 基于私钥吊销 | `POST /revoke` | JSON 或 multipart：`{serial, privateKeyPem, reason?}` |
+| 智能卡证书分发 | `GET/POST /card/get/cert` | 取回 X25519 加密后的 PFX（TPM 虚拟智能卡） |
+| 智能卡证书上传 | `POST /card/put/cert` | 上传 PFX，Worker 侧加密后存入 KV |
+| 智能卡上传页面 | `GET /card/web/cert` | 浏览器上传界面（服务端渲染，无外部依赖） |
 | 健康检查 | `GET /api/health` | 返回 ts 与路由清单 |
 
 ---
@@ -157,6 +160,86 @@ EOF
 
 校验不通过返回 401 `{done:false,text:"Invalid private key"}`；成功返回 `{done:true, serial, revokedAt}`。
 
+### 5.5 TPM 虚拟智能卡证书分发（/card/\*）
+
+把 TPMSmartCard 项目（Windows TPM 虚拟智能卡管理工具）中 `SmartCardWEB.py`
+（Flask + 本地 pickle 文件）的能力迁移到 Worker：**传输层仍是 X25519 +
+AES-256-CBC，存储层改为 Cloudflare KV**，协议逐字段兼容，现网智能卡工具无需改动。
+
+工作流：
+
+```
+┌─ Windows 智能卡工具 ─┐          ┌──────────── Worker ────────────┐
+│ 1. 生成临时 X25519    │          │                               │
+│    密钥对 → 传输密钥   │          │                               │
+│ 2. 打开上传页粘贴密钥  │ ───────► │ POST /card/put/cert           │
+│    并上传 PFX + 密码   │          │  · 与客户端公钥协商共享密钥     │
+│                       │          │  · AES-256-CBC 加密 PFX       │
+│                       │          │  · 密文 + 服务端公钥写入 KV    │
+│ 3. 点击导入           │ ◄─────── │ GET  /card/get/cert           │
+│    · 协商同一共享密钥  │          │  · 返回 vaults/pubkey/pfxkey  │
+│    · 解密 PFX → 写入   │          │                               │
+│      TPM 虚拟智能卡    │          │                               │
+└───────────────────────┘          └───────────────────────────────┘
+```
+
+| 路由 | 说明 |
+| --- | --- |
+| `GET`/`POST /card/get/cert` | 下发。`pubkey` 可放 query / urlencoded body / JSON / `x-pubkey` 头。命中：`{flag:true,data:{vaults,pubkey,pfxkey}}`；未命中：`{flag:false,data:null}`（与原 Flask 一致） |
+| `POST /card/put/cert` | 上传。`multipart/form-data`：`pubkey`（传输密钥）、`pfxkey`（PFX 密码）、`vaults`（.pfx/.p12 文件）、可选 `label`。也支持 `vaults_b64`（base64 文本，便于脚本调用） |
+| `GET`/`POST /card/status` | 仅查询某传输密钥是否已有缓存（只返回大小/时间/备注等元信息） |
+| `GET /card/web/cert` | 浏览器上传页面（支持 `?pubkey=` 预填） |
+| `GET /card/admin/list` | 缓存列表（需 `CARD_ADMIN_TOKEN`） |
+| `POST /card/admin/delete` | 删除缓存（需令牌，字段 `fingerprint` 或 `pubkey`） |
+| `GET /get/cert`、`POST /put/cert`、`GET /web/cert` | 旧 Flask 路径别名，便于反向代理把 `/card` 前缀重写掉的历史部署继续可用 |
+
+安全模型：
+
+- **端到端加密**：Worker 只用「客户端公钥 + 自己临时生成的私钥」协商共享密钥，
+  加密后立即丢弃私钥，**不落盘共享密钥**。KV 中只有密文，即使 KV 被读取，
+  没有客户端的临时私钥也无法解出 PFX。
+- **传输密钥即凭证**：KV key = `card:v1:<SHA-256(客户端公钥)>`，公钥本身是
+  一次性能力令牌（客户端每次「云端下发」都会重新生成）。
+- **口令保护**：`pfxkey` 需要回传给客户端，默认明文落盘；配置 Secret
+  `CARD_MASTER_KEY` 后改为 AES-256-GCM 包裹后再落盘（防 KV 快照泄露口令）。
+- **时效**：默认 7 天自动过期（`CARD_TTL_SECONDS`，0 = 永不过期）；
+  相同传输密钥重复上传视为覆盖。
+- **校验**：拒绝非 PKCS#12 内容（DER 首字节非 `0x30`，如误传 `.crt/.pem`）、
+  超过 `CARD_MAX_BYTES` 的文件、长度非 32 字节的传输密钥；下发响应带
+  `Cache-Control: no-store`，页带 CSP。
+
+> **关于「GET 带 body」**：智能卡工具旧版用
+> `requests.get(url, data={"pubkey": pub})` 把传输密钥放在请求体里（这是 Flask
+> 时代的写法）。已在真实 workerd 运行时验证该请求体会被完整保留、解析正常
+> （见 `test/card-vault.test.ts` 的协议用例）。
+> 若部署在中间还有会丢弃 GET body 的反向代理/CDN 之后，可让用户在工具的
+> 「云端下发」地址里改成 query 形式：`https://<your-worker>/card/get/cert?pubkey=<传输密钥>`，
+> 该形式在任何链路上都可用。
+
+命令行快速验证（`pubkey` 换成工具里复制的传输密钥）：
+
+```bash
+curl -X POST https://<your-worker>/card/put/cert \
+  -F "pubkey=<base64 传输密钥>" \
+  -F "pfxkey=<PFX 密码>" \
+  -F "vaults=@card.pfx" \
+  -F "label=张三-笔记本"
+
+# 取回（浏览器/工具即可；vaults 为密文，需客户端私钥解密）
+curl "https://<your-worker>/card/get/cert?pubkey=<base64 传输密钥>"
+```
+
+可选配置（均非必需）：
+
+```bash
+# 独立 KV 命名空间（不配置则复用 CERT_KV，以 card:v1: 前缀隔离）
+npx wrangler kv:namespace create CARD_KV
+
+# 口令静态加密 + 管理接口
+npx wrangler secret put CARD_MASTER_KEY
+npx wrangler secret put CARD_ADMIN_TOKEN
+```
+
 ---
 
 ## 目录结构
@@ -172,7 +255,9 @@ worker/
 │  │  ├─ issuer.ts           # 证书签发核心
 │  │  ├─ pfx.ts              # PKCS#12 打包
 │  │  ├─ zipper.ts           # ZIP 组装
-│  │  ├─ kv.ts               # KV 存储层
+│  │  ├─ kv.ts               # KV 存储层（证书状态）
+│  │  ├─ card-vault.ts       # 智能卡分发：X25519 + AES-256-CBC + KV
+│  │  ├─ card-page.ts        # 智能卡证书上传页面（服务端渲染 HTML）
 │  │  ├─ captcha.ts          # Cloudflare Turnstile 校验
 │  │  ├─ ocsp.ts             # OCSP 响应构造
 │  │  └─ crl.ts              # CRL 响应构造
@@ -180,8 +265,12 @@ worker/
 │  │  ├─ cert.ts             # /cert/
 │  │  ├─ ocsp.ts             # /ocsp, /ocsp/:b64
 │  │  ├─ crl.ts              # /crl/:file
-│  │  └─ revoke.ts           # /revoke
+│  │  ├─ revoke.ts           # /revoke
+│  │  └─ card.ts             # /card/*（智能卡证书上传/下发）
 │  └─ __tests__/
+│     └─ kv.test.ts
+├─ test/
+│  └─ card-vault.test.ts     # 密码学互通 + KV + HTTP 协议测试
 ├─ wrangler.toml
 ├─ tsconfig.json
 └─ package.json
@@ -210,3 +299,16 @@ worker/
 | 证书吊销 | 未实现 | `POST /revoke`（私钥证明） |
 | 前端托管 | 独立静态站点 / GitHub Pages | 与 API 同站，由 Workers Static Assets 托管 |
 | 部署 | `python CAServer.py` | `wrangler deploy`（含前端）|
+
+### 与 SmartCardWEB.py 的差异
+
+| 维度 | Python (SmartCardWEB.py) | Worker (本项目 `/card/*`) |
+| --- | --- | --- |
+| 运行时 | Flask + Flask-Classful | Hono + Cloudflare Workers |
+| 持久化 | 本地 `Caches/PullCerts.pkl`（pickle） | Cloudflare KV（`card:v1:<公钥 SHA-256>`，默认 7 天过期） |
+| 加密 | `cryptography` X25519 + AES-CBC(零 IV) | WebCrypto X25519 + AES-CBC(零 IV)，**协议逐字节兼容** |
+| 并发 | 进程内 `threading.Lock` + 全量重写文件 | KV 原子写入，多实例天然安全 |
+| 口令存储 | 明文写 pickle | 明文或 `CARD_MASTER_KEY` 下 AES-256-GCM 加密 |
+| 上传页面 | 静态 `templates/CertUpload.html`（POST 到 127.0.0.1:1080） | `/card/web/cert` 服务端渲染，含拖拽/校验/状态/管理面板 |
+| 管理能力 | 无 | `/card/admin/list`、`/card/admin/delete`（令牌鉴权） |
+| 输入校验 | 仅判空 | 校验 PKCS#12 结构、大小、公钥长度，并给出可读错误 |

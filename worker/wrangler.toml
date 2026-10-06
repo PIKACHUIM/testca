@@ -17,6 +17,14 @@ binding = "CERT_KV"
 id = "REPLACE_WITH_KV_NAMESPACE_ID"
 preview_id = "REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID"
 
+# ===== KV 命名空间：TPM 智能卡证书分发密文（可选） =====
+# 不配置时自动复用上面的 CERT_KV（记录以 `card:v1:` 前缀隔离，互不影响）。
+# 如需独立命名空间，执行 `wrangler kv:namespace create CARD_KV` 后取消注释：
+# [[kv_namespaces]]
+# binding = "CARD_KV"
+# id = "REPLACE_WITH_CARD_KV_ID"
+# preview_id = "REPLACE_WITH_CARD_PREVIEW_KV_ID"
+
 # ===== 运行时变量 =====
 [vars]
 CERTS_ORIGIN = ""
@@ -32,6 +40,16 @@ MAIL_CA_KEY = ""
 MTLS_CA_KEY = ""
 SIGN_CA_KEY = ""
 OCSP_CA_KEY = ""
+
+# ===== TPM 智能卡证书分发（/card/*）=====
+# 分发记录的保留时长（秒），默认 604800 = 7 天；填 0 表示永不过期
+CARD_TTL_SECONDS = "604800"
+# 单个 PFX 大小上限（字节），默认 8388608 = 8 MiB
+CARD_MAX_BYTES = "8388608"
+
+# ⚠️ 以下两个请用 `wrangler secret put <NAME>` 配置，不要写在此文件（会明文入库）：
+#   CARD_MASTER_KEY   可选：用该口令派生 AES-256-GCM 密钥，加密 KV 中的 PFX 密码
+#   CARD_ADMIN_TOKEN  可选：启用 /card/admin/list、/card/admin/delete 管理接口
 
 [dev]
 port = 8786

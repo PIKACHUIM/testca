@@ -134,10 +134,13 @@ export async function buildPfx(params: BuildPfxParams): Promise<Uint8Array> {
   await shroudedKeyBag.makeInternalValues(
     {
       password: strToArrayBuffer(password),
+      // 注意：pkijs 的 ContentEncryptionAesCbcParams 直接复用 WebCrypto 的
+      // AesCbcParams（内含必填的 iv），但 pkijs 运行期在未提供 iv 时会自行
+      // 随机生成，因此这里只给 name/length 是官方推荐用法，需显式收窄类型。
       contentEncryptionAlgorithm: {
         name: "AES-CBC",
         length: 256,
-      },
+      } as unknown as pkijs.ContentEncryptionAlgorithm,
       hmacHashAlgorithm: "SHA-256",
       iterationCount: 2048,
     },

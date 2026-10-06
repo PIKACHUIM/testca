@@ -15,7 +15,7 @@ import {
   type CaName,
 } from "./ca-registry";
 import { listRevokedByCa } from "./kv";
-import { fromHex } from "./bytes";
+import { asBufferSource, fromHex } from "./bytes";
 import type { Env } from "../env";
 
 // 确保 pkijs 引擎已注册
@@ -54,7 +54,9 @@ export async function buildCrl(
     const rc = new pkijs.RevokedCertificate({
       userCertificate: new asn1js.Integer({
         isHexOnly: true,
-        valueHex: sn.buffer.slice(sn.byteOffset, sn.byteOffset + sn.byteLength),
+        valueHex: asBufferSource(
+          sn.buffer.slice(sn.byteOffset, sn.byteOffset + sn.byteLength),
+        ),
       }),
       revocationDate: new pkijs.Time({ type: 0, value: new Date(r.revokedAt) }),
       crlEntryExtensions: new pkijs.Extensions({
@@ -79,9 +81,11 @@ export async function buildCrl(
     critical: false,
     extnValue: new asn1js.Integer({
       isHexOnly: true,
-      valueHex: crlNumberBytes.buffer.slice(
-        crlNumberBytes.byteOffset,
-        crlNumberBytes.byteOffset + crlNumberBytes.byteLength,
+      valueHex: asBufferSource(
+        crlNumberBytes.buffer.slice(
+          crlNumberBytes.byteOffset,
+          crlNumberBytes.byteOffset + crlNumberBytes.byteLength,
+        ),
       ),
     }).toBER(false),
   });
