@@ -86,7 +86,8 @@ export default defineConfig(({ command }) => ({
       // ---------------------------------------------------------------
       // dev 代理：把 Worker 路径全部转发到本地 wrangler dev (默认 8786)
       // 这样前端 http://localhost:5172 发起的 /api/*、/cert/、/ocsp、
-      // /crl/*、/revoke 都能打到后端，避免被 SPA fallback 返回 index.html
+      // /crl/*、/revoke、/card/* 都能打到后端，避免被 SPA fallback 返回
+      // index.html（智能卡证书上传页 /card/web/cert 也在这里）
       //
       // 说明：Vite 底层用的是 http-proxy，默认在 target 不可达时会把错误
       //      传给下一个中间件，Vite 随后会用 SPA fallback 返回 index.html。
@@ -124,6 +125,12 @@ export default defineConfig(({ command }) => ({
           '/ocsp': make(),
           '/crl': make(),
           '/revoke': make(),
+          // 智能卡证书分发：页面上传 + 下发 API（见 worker/src/routes/card.ts）
+          '/card': make(),
+          // 兼容 SmartCardWEB.py 的旧根路径别名
+          '/get/cert': make(),
+          '/put/cert': make(),
+          '/web/cert': make(),
         }
       })(),
     },
