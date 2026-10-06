@@ -1,0 +1,30 @@
+# Cloudflare Pages: 强制声明静态资源的 MIME 类型
+# 修复 "Failed to load module script ... MIME type of application/octet-stream" 报错
+
+# Vite 产物带内容 hash，可以永久强缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 显式声明 JavaScript 模块的 Content-Type（Cloudflare Pages 某些路径下会 fallback 成 octet-stream）
+/*.js
+  Content-Type: application/javascript; charset=utf-8
+  X-Content-Type-Options: nosniff
+/*.mjs
+  Content-Type: application/javascript; charset=utf-8
+  X-Content-Type-Options: nosniff
+/*.jsx
+  Content-Type: application/javascript; charset=utf-8
+/*.ts
+  Content-Type: application/javascript; charset=utf-8
+/*.tsx
+  Content-Type: application/javascript; charset=utf-8
+/*.css
+  Content-Type: text/css; charset=utf-8
+/*.wasm
+  Content-Type: application/wasm
+/*.map
+  Content-Type: application/json; charset=utf-8
+/*.json
+  Content-Type: application/json; charset=utf-8
+/*.svg
+  Content-Type: image/svg+xml
