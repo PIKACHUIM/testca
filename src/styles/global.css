@@ -1019,10 +1019,195 @@ a.bare { border: 0; }
   margin: 28px 0;
 }
 
+/* ------------------ Facts（能力/参数标签，替代说明性段落） ------------------ */
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1px dashed var(--line);
+  background: color-mix(in srgb, var(--panel-2) 55%, transparent);
+  font-family: var(--ff-mono);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.fact .anticon { font-size: 12px; color: var(--pika); }
+
+.pfoot {
+  margin: 22px 0 0;
+  text-align: right;
+  font-size: 12px;
+}
+
+/* ------------------ Flow strip（紧凑流程条） ------------------ */
+
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  margin: 0 0 26px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.flow__i { display: inline-flex; align-items: center; gap: 8px; }
+
+.flow__i b {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--pika);
+  color: var(--pika-ink);
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  font-weight: 600;
+  display: grid;
+  place-items: center;
+}
+
+.flow__sep { font-style: normal; color: var(--ink-4); margin-left: 6px; }
+
+/* ------------------ Help（悬浮帮助：FAB + 抽屉 + 行内提示） ------------------ */
+
+.help-fab {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 13px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--pika) 38%, var(--line));
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  backdrop-filter: blur(12px);
+  color: var(--ink-2);
+  font-family: var(--ff-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
+  transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.help-fab:hover {
+  color: var(--pika-ink);
+  background: var(--pika);
+  border-color: var(--pika);
+  transform: translateY(-2px);
+}
+
+.help-fab .anticon { font-size: 14px; }
+
+.help-head { display: flex; flex-direction: column; gap: 5px; }
+
+.help-head__kicker {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--pika);
+}
+
+.help-head__title {
+  font-family: var(--ff-display);
+  font-size: 19px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.help-drawer .ant-drawer-body { padding: 0 0 28px; }
+
+.help-body { padding: 2px 24px 0; }
+
+.help-sec {
+  position: relative;
+  padding: 18px 0 18px 32px;
+  border-bottom: 1px dashed var(--line);
+}
+
+.help-sec:last-of-type { border-bottom: 0; }
+
+.help-sec__n {
+  position: absolute;
+  left: 0;
+  top: 21px;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+}
+
+.help-sec__t {
+  font-family: var(--ff-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+
+.help-sec__b {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.help-sec__b:last-child { margin-bottom: 0; }
+
+.help-foot {
+  margin: 16px 0 0;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.hint {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0 3px;
+  color: var(--ink-3);
+  cursor: help;
+  font-size: 12px;
+  line-height: 1;
+  vertical-align: middle;
+  transition: color .2s ease;
+}
+
+.hint:hover { color: var(--pika); }
+
+.hint-pop .ant-popover-inner { max-width: 340px; }
+
+.hint-body__t { font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+
+.hint-body__b p { margin: 0 0 6px; font-size: 12.5px; line-height: 1.65; }
+.hint-body__b p:last-child { margin-bottom: 0; }
+
+@media (max-width: 720px) {
+  .help-fab { right: 16px; bottom: 16px; padding: 13px; }
+  .help-fab__label { display: none; }
+}
+
 /* Print: simple black-on-white */
 @media print {
   .shell { display: block; height: auto; }
   .rail, .appbar { display: none !important; }
+  .help-fab, .hint { display: none !important; }
   .main { overflow: visible; }
   .page { padding: 0; }
   .phead__actions { display: none !important; }

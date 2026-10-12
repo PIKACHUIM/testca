@@ -206,9 +206,21 @@ export const REVOKE_ENDPOINT = '/revoke'
 /**
  * TPM 虚拟智能卡证书分发接口（同站部署时均为相对路径）。
  * 服务端实现见 worker/src/routes/card.ts。
+ *
+ * 两种下发方式共用 `/card/put/cert` 与 `/card/status`：
+ *   - 传输密钥（X25519 预协商）：传 `pubkey`
+ *   - 取件码（自协商）：传 `mode=code`（上传）/ `code`（查询）
  */
 export const CARD_PUT_ENDPOINT = '/card/put/cert'
 export const CARD_STATUS_ENDPOINT = '/card/status'
+/** 取件码模式上传（等价于 `POST /card/put/cert` + `mode=code`） */
+export const CARD_PUT_CODE_ENDPOINT = '/card/put/code'
+/** 取件码状态查询（不核销次数） */
+export const CARD_CODE_STATUS_ENDPOINT = '/card/code/status'
+/** 管理员登录（口令换取会话令牌） */
+export const CARD_ADMIN_LOGIN_ENDPOINT = '/card/admin/login'
+/** 查询登录状态与服务端策略（是否允许匿名下发等） */
+export const CARD_ADMIN_SESSION_ENDPOINT = '/card/admin/session'
 export const CARD_ADMIN_LIST_ENDPOINT = '/card/admin/list'
 export const CARD_ADMIN_DELETE_ENDPOINT = '/card/admin/delete'
 /** 服务端渲染的上传页：供智能卡工具 / 无 JS 环境直接打开 */

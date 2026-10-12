@@ -5,6 +5,7 @@ import {
   PrinterOutlined,
 } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
 import MarkdownDoc from '../components/MarkdownDoc'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
@@ -37,14 +38,10 @@ const DocumentPage: React.FC<Props> = ({
   return (
     <div className="page">
       <PageHead
-        num={t(num)}
-        title={
-          <>
-            {t(titleA)}
-            <em>{t(titleEm)}</em>
-          </>
-        }
-        desc={t(desc)}
+        num={num}
+        titleA={titleA}
+        titleEm={titleEm}
+        desc={desc}
         actions={
           <>
             <a className="btn btn--primary" href={pdfHref} download>
@@ -67,6 +64,8 @@ const DocumentPage: React.FC<Props> = ({
       <article className="card" style={{ padding: 'clamp(24px, 4vw, 48px)' }}>
         <MarkdownDoc source={src} />
       </article>
+
+      <PageHelp page={slug} />
     </div>
   )
 }

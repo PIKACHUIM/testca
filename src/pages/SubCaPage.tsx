@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { Input } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
 import CaCard from '../components/CaCard'
 import { SUB_CAS } from '../data/constants'
 import { useI18n } from '../i18n/I18nProvider'
@@ -24,14 +25,10 @@ const SubCaPage: React.FC = () => {
   return (
     <div className="page">
       <PageHead
-        num={t('sub.num')}
-        title={
-          <>
-            {t('sub.title.a')}
-            <em>{t('sub.title.em')}</em>
-          </>
-        }
-        desc={t('sub.desc')}
+        num="sub.num"
+        titleA="sub.title.a"
+        titleEm="sub.title.em"
+        desc="sub.desc"
         actions={
           <Input
             allowClear
@@ -65,6 +62,8 @@ const SubCaPage: React.FC = () => {
           — {t('sub.empty')} —
         </div>
       )}
+
+      <PageHelp page="sub" />
     </div>
   )
 }

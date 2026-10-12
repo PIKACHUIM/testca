@@ -12,6 +12,8 @@ import {
   FileProtectOutlined,
 } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
+import Hint from '../components/Hint'
 import type { PageKey } from '../hooks/useHashRoute'
 import { SUB_CAS } from '../data/constants'
 import { useI18n } from '../i18n/I18nProvider'
@@ -38,13 +40,10 @@ const OverviewPage: React.FC<Props> = ({ onNav }) => {
   return (
     <div className="page">
       <PageHead
-        num={t('ov.num')}
-        title={
-          <>
-            {t('ov.title.a')}<em>{t('ov.title.em')}</em>
-          </>
-        }
-        desc={t('ov.desc')}
+        num="ov.num"
+        titleA="ov.title.a"
+        titleEm="ov.title.em"
+        desc="ov.desc"
         actions={
           <>
             <button type="button" className="btn btn--primary" onClick={() => onNav('apply')}>
@@ -60,8 +59,11 @@ const OverviewPage: React.FC<Props> = ({ onNav }) => {
       <div className="notice notice--danger" style={{ marginBottom: 28 }}>
         <div className="notice__icon" aria-hidden><WarningOutlined /></div>
         <div>
-          <h3 className="notice__title">{t('ov.notice.title')}</h3>
-          <p className="notice__body" style={{ whiteSpace: 'pre-line' }}>{t('ov.notice.body')}</p>
+          <h3 className="notice__title">
+            {t('ov.notice.title')}
+            <Hint title="help.ov.2.t" body="ov.notice.body" />
+          </h3>
+          <p className="notice__body">{t('ov.notice.short')}</p>
         </div>
       </div>
 
@@ -127,20 +129,14 @@ const OverviewPage: React.FC<Props> = ({ onNav }) => {
         </span>
         <h3 className="card__title" style={{ marginTop: 12, fontSize: 20 }}>
           {t('ov.legal.title')}
+          <Hint title="help.ov.4.t" body="ov.legal.body" />
         </h3>
-        <p
-          className="card__desc"
-          style={{
-            marginTop: 10,
-            lineHeight: 1.85,
-            color: 'var(--ink-2)',
-            fontSize: 13,
-            textAlign: 'justify',
-          }}
-        >
-          {t('ov.legal.body')}
+        <p className="card__desc" style={{ marginTop: 10, fontSize: 13 }}>
+          {t('ov.legal.short')}
         </p>
       </article>
+
+      <PageHelp page="overview" />
     </div>
   )
 }

@@ -16,6 +16,8 @@ import {
   WarningFilled,
 } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
+import Hint from '../components/Hint'
 import Captcha, { type CaptchaHandle } from '../components/Captcha'
 import {
   CERT_PRODUCTS,
@@ -126,13 +128,10 @@ const ApplyPage: React.FC = () => {
   return (
     <div className="page">
       <PageHead
-        num={t('apply.num')}
-        title={
-          <>
-            {t('apply.title.a')}<em>{t('apply.title.em')}</em>
-          </>
-        }
-        desc={t('apply.desc')}
+        num="apply.num"
+        titleA="apply.title.a"
+        titleEm="apply.title.em"
+        desc="apply.desc"
       />
 
       <div className="wiz">
@@ -268,7 +267,10 @@ const ApplyPage: React.FC = () => {
               <div className="notice notice--danger" style={{ marginTop: 18 }}>
                 <div className="notice__icon" aria-hidden><WarningFilled /></div>
                 <div>
-                  <h3 className="notice__title">{t('apply.notice.title')}</h3>
+                  <h3 className="notice__title">
+                    {t('apply.notice.title')}
+                    <Hint title="help.apply.3.t" body="help.apply.3.b" />
+                  </h3>
                   <p className="notice__body">{t('apply.notice.body')}</p>
                 </div>
               </div>
@@ -431,6 +433,8 @@ const ApplyPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      <PageHelp page="apply" />
     </div>
   )
 }

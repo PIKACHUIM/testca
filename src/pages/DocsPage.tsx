@@ -9,6 +9,7 @@ import {
   FileMarkdownOutlined,
 } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
 import type { PageKey } from '../hooks/useHashRoute'
 import { useI18n } from '../i18n/I18nProvider'
 import type { MessageKey } from '../i18n/messages'
@@ -60,14 +61,10 @@ const DocsPage: React.FC<Props> = ({ onNav }) => {
   return (
     <div className="page">
       <PageHead
-        num={t('docs.num')}
-        title={
-          <>
-            {t('docs.title.a')}
-            <em>{t('docs.title.em')}</em>
-          </>
-        }
-        desc={t('docs.desc')}
+        num="docs.num"
+        titleA="docs.title.a"
+        titleEm="docs.title.em"
+        desc="docs.desc"
         actions={
           <a
             className="btn"
@@ -143,6 +140,8 @@ const DocsPage: React.FC<Props> = ({ onNav }) => {
           </button>
         ))}
       </div>
+
+      <PageHelp page="docs" />
     </div>
   )
 }

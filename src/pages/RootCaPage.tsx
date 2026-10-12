@@ -7,6 +7,8 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
+import Hint from '../components/Hint'
 import { ROOT_CA, withBase } from '../data/constants'
 import { useI18n } from '../i18n/I18nProvider'
 
@@ -18,20 +20,19 @@ const RootCaPage: React.FC = () => {
   return (
     <div className="page">
       <PageHead
-        num={t('root.num')}
-        title={
-          <>
-            {t('root.title.a')}
-            <em>{t('root.title.em')}</em>
-          </>
-        }
-        desc={t('root.desc')}
+        num="root.num"
+        titleA="root.title.a"
+        titleEm="root.title.em"
+        desc="root.desc"
       />
 
       <div className="notice notice--info" style={{ marginBottom: 24 }}>
         <div className="notice__icon" aria-hidden><InfoCircleOutlined /></div>
         <div>
-          <h3 className="notice__title">{t('root.how.title')}</h3>
+          <h3 className="notice__title">
+            {t('root.how.title')}
+            <Hint title="help.root.1.t" body="help.root.1.b" />
+          </h3>
           <p className="notice__body">{t('root.how.body')}</p>
         </div>
       </div>
@@ -132,6 +133,8 @@ const RootCaPage: React.FC = () => {
           </article>
         </div>
       </div>
+
+      <PageHelp page="root" />
     </div>
   )
 }

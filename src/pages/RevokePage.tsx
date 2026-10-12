@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { Form, Input, Select, Button, App as AntdApp, Alert, Upload, Typography } from 'antd'
 import {
   StopOutlined,
-  KeyOutlined,
   NumberOutlined,
   UploadOutlined,
   WarningFilled,
   CheckCircleFilled,
 } from '@ant-design/icons'
 import PageHead from '../components/PageHead'
+import PageHelp from '../components/PageHelp'
+import Hint from '../components/Hint'
 import { REVOKE_ENDPOINT } from '../data/constants'
 import { useI18n } from '../i18n/I18nProvider'
 
@@ -95,19 +96,19 @@ const RevokePage: React.FC = () => {
   return (
     <div className="page">
       <PageHead
-        num={t('revoke.num')}
-        title={
-          <>
-            {t('revoke.title.a')}<em>{t('revoke.title.em')}</em>
-          </>
-        }
-        desc={t('revoke.desc')}
+        num="revoke.num"
+        titleA="revoke.title.a"
+        titleEm="revoke.title.em"
+        desc="revoke.desc"
       />
 
       <div className="notice notice--danger" style={{ marginBottom: 24 }}>
         <div className="notice__icon" aria-hidden><WarningFilled /></div>
         <div>
-          <h3 className="notice__title">{t('revoke.notice.title')}</h3>
+          <h3 className="notice__title">
+            {t('revoke.notice.title')}
+            <Hint title="help.revoke.2.t" body="help.revoke.2.b" />
+          </h3>
           <p className="notice__body">{t('revoke.notice.body')}</p>
         </div>
       </div>
@@ -187,6 +188,7 @@ const RevokePage: React.FC = () => {
                 </Upload>
               </span>
             }
+            extra={t('revoke.f.key.extra')}
             rules={[
               { required: true, message: t('revoke.r.key') },
               {
@@ -206,15 +208,6 @@ const RevokePage: React.FC = () => {
               style={{ fontFamily: 'var(--ff-mono)', fontSize: 12 }}
             />
           </Form.Item>
-
-          <Alert
-            type="info"
-            showIcon
-            icon={<KeyOutlined />}
-            style={{ marginBottom: 24 }}
-            message={t('revoke.info.title')}
-            description={t('revoke.info.body')}
-          />
 
           <Button
             type="primary"
@@ -240,6 +233,8 @@ const RevokePage: React.FC = () => {
           </Button>
         </Form>
       </div>
+
+      <PageHelp page="revoke" />
     </div>
   )
 }
