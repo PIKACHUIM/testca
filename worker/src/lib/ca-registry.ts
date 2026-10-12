@@ -101,6 +101,9 @@ export const CA_PROFILES: Record<CaName, CaProfile> = {
   code: {
     keyUsage: ["digitalSignature"],
     extKeyUsage: [
+      // 标准 Authenticode 代码签名（用户态可执行文件 / 脚本）
+      "1.3.6.1.5.5.7.3.3",
+      // 下列为 Microsoft 驱动 / 系统组件模板的扩展用途
       "1.3.6.1.4.1.311.61.1.1",
       "1.3.6.1.4.1.311.10.3.5",
       "1.3.6.1.4.1.311.10.3.6",
