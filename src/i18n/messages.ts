@@ -36,7 +36,7 @@ export const persistLang = (lang: Lang): void => {
 export const MESSAGES = {
   zh: {
     // Brand
-    'brand.title': 'Pikachu Root CA',
+    'brand.title': 'Pikachu Test CA',
     'brand.sub': '皮卡丘测试根证书服务',
 
     // Rail
