@@ -42,14 +42,36 @@ SIGN_CA_KEY = ""
 OCSP_CA_KEY = ""
 
 # ===== TPM 智能卡证书分发（/card/*）=====
-# 分发记录的保留时长（秒），默认 604800 = 7 天；填 0 表示永不过期
+# 传输密钥模式的记录保留时长（秒），默认 604800 = 7 天；填 0 表示永不过期
 CARD_TTL_SECONDS = "604800"
 # 单个 PFX 大小上限（字节），默认 8388608 = 8 MiB
 CARD_MAX_BYTES = "8388608"
 
-# ⚠️ 以下两个请用 `wrangler secret put <NAME>` 配置，不要写在此文件（会明文入库）：
-#   CARD_MASTER_KEY   可选：用该口令派生 AES-256-GCM 密钥，加密 KV 中的 PFX 密码
-#   CARD_ADMIN_TOKEN  可选：启用 /card/admin/list、/card/admin/delete 管理接口
+# ===== TPM 智能卡证书分发 · 取件码（自协商）模式 =====
+# 取件码默认有效期（秒），默认 86400 = 24 小时；填 0 表示永不过期（上限 90 天）
+# 单次上传可用表单字段 ttl 覆盖
+CARD_CODE_TTL_SECONDS = "86400"
+# 取件码默认下发次数（默认 1；单次上传可用表单字段 max_uses 覆盖，上限 100）
+CARD_CODE_USES = "1"
+# PBKDF2-SHA256 迭代次数（默认 100000，钳制在 10000 ~ 1000000）
+# 注意：Worker 的 CPU 时间预算随套餐不同，免费套餐如遇超时可下调到 10000~20000
+CARD_CODE_ITERATIONS = "100000"
+
+# ===== 管理员登录 / 鉴权 =====
+# 是否允许「未登录」使用上传 / 生成取件码 / 状态查询 / 管理接口。
+#   "true"（默认）= 任何人可上传并生成取件码（自助下发）
+#   "false"        = 上述操作必须先管理员登录；取回接口不受影响
+CARD_ALLOW_ANONYMOUS = "true"
+# 管理员会话有效期（秒），默认 43200 = 12 小时，钳制在 300 ~ 604800
+CARD_ADMIN_SESSION_SECONDS = "43200"
+# 登录失败容忍次数（每个窗口 / 每个来源 IP），默认 5（窗口 10 分钟）
+CARD_LOGIN_MAX_FAILURES = "5"
+
+# ⚠️ 以下请用 `wrangler secret put <NAME>` 配置，不要写在此文件（会明文入库）：
+#   CARD_ADMIN_PASSWORD  管理员登录口令（/card/admin/login 换取会话令牌）
+#   CARD_ADMIN_TOKEN     旧版静态管理令牌（脚本 / 兼容用，二者至少配一个管理接口才可用）
+#   CARD_MASTER_KEY      可选：用该口令派生 AES-256-GCM 密钥，加密 KV 中的 PFX 密码
+#   CARD_CODE_PEPPER     可选：取件码指纹 pepper（未配置则回退 CARD_MASTER_KEY 或内置常量）
 
 [dev]
 port = 8786

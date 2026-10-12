@@ -34,12 +34,21 @@
  *   后改为 AES-256-GCM 包裹后再落盘（防 KV 快照泄露口令）。
  * - KV key 只保存客户端公钥的 SHA-256 指纹，不落盘明文公钥。
  * - 记录默认 7 天过期（`CARD_TTL_SECONDS` 可调，0 = 不过期）。
+ *
+ * 另有一种“取件码（自协商）”模式：上传时由服务端生成随机口令，客户端仅凭该
+ * 口令即可取回并解密，无需事先与平台交换临时公钥。其协议定义在 `card-code.ts`，
+ * 与本文档的 v1 记录共用同一 KV 命名空间（`card:v2:code:` 前缀）。
  */
 import type { Env } from "../env";
 import { asBufferSource, fromBase64, sha256Hex, toBase64 } from "./bytes";
 
-/** KV key 前缀（复用 CERT_KV 时避免与证书/CRL 记录冲突） */
-const CARD_PREFIX = "card:v1:";
+/** KV key 前缀（复用 CERT_KV 时避免与证书/CRL 记录冲突）—— 传输密钥（X25519）模式 */
+export const CARD_PREFIX = "card:v1:";
+/**
+ * 取件码（自协商）模式的 KV key 前缀；具体实现见 `card-code.ts`。
+ * 两种模式共用同一 KV 命名空间，靠前缀隔离。
+ */
+export const CARD_CODE_PREFIX = "card:v2:code:";
 /** AES-CBC 固定零 IV（与原 Python 实现一致，勿改） */
 const ZERO_IV = new Uint8Array(16);
 /** PFX 默认保留 7 天 */
@@ -47,7 +56,7 @@ const DEFAULT_TTL_SECONDS = 7 * 24 * 3600;
 /** PFX 默认上限 8 MiB（base64 后约 10.7 MiB，仍在 KV 25 MiB 单值上限内） */
 const DEFAULT_MAX_BYTES = 8 * 1024 * 1024;
 /** 备注最大长度 */
-const MAX_LABEL_LEN = 64;
+export const MAX_LABEL_LEN = 64;
 
 /** 业务校验失败（路由层转 400 并回显 message） */
 export class CardVaultError extends Error {
@@ -76,13 +85,27 @@ export interface CardVaultRecord {
   label?: string;
 }
 
-/** 对外暴露的元信息（不含任何密文 / 口令） */
+/**
+ * 对外暴露的元信息（不含任何密文 / 口令）。
+ *
+ * - `mode: "key"`  —— 传输密钥（X25519 预协商）模式，见 `sealVault`
+ * - `mode: "code"` —— 取件码（自协商）模式，见 `card-code.ts`
+ */
 export interface CardVaultMeta {
   fingerprint: string;
+  mode: "key" | "code";
   createdAt: string;
   size: number;
   sha256: string;
   label?: string;
+  /** 取件码模式：过期时间（ISO，空 = 永不过期） */
+  expiresAt?: string;
+  /** 取件码模式：允许下发次数 */
+  maxUses?: number;
+  /** 取件码模式：已下发次数 */
+  used?: number;
+  /** 取件码模式：剩余可用次数（maxUses - used） */
+  remaining?: number;
 }
 
 /** 下发内容（与 SmartCardWEB.py 的 data 字段一致） */
@@ -125,13 +148,36 @@ function resolveTtlSeconds(env: Env): number | null {
   return n < 60 ? 60 : n; // KV 要求 expirationTtl >= 60
 }
 
-function resolveMaxBytes(env: Env): number {
+export function resolveMaxBytes(env: Env): number {
   const raw = env.CARD_MAX_BYTES;
   if (raw === undefined || raw === null || String(raw).trim() === "") {
     return DEFAULT_MAX_BYTES;
   }
   const n = Number.parseInt(String(raw).trim(), 10);
   return Number.isFinite(n) && n > 0 ? n : DEFAULT_MAX_BYTES;
+}
+
+/**
+ * 校验并归一化上传的 PFX：
+ *   - 非空、未超 `CARD_MAX_BYTES`
+ *   - PKCS#12 为 DER 编码，首字节必须是 SEQUENCE(0x30)
+ */
+export function validatePfx(env: Env, pfx: Uint8Array): void {
+  const max = resolveMaxBytes(env);
+  if (!pfx || pfx.length === 0) {
+    throw new CardVaultError("上传的 PFX 文件为空");
+  }
+  if (pfx.length > max) {
+    throw new CardVaultError(
+      `PFX 文件过大：${fmtBytes(pfx.length)}，上限 ${fmtBytes(max)}（可通过 CARD_MAX_BYTES 调整）`,
+    );
+  }
+  // 拦截误传的 .crt / .pem / .p7b
+  if (pfx[0] !== 0x30) {
+    throw new CardVaultError(
+      "上传内容不是有效的 PKCS#12 (PFX/P12)：DER 首字节应为 0x30，请确认文件类型",
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -242,7 +288,7 @@ async function deriveMasterKey(env: Env): Promise<Uint8Array | null> {
   return new Uint8Array(digest);
 }
 
-async function wrapPfxKey(
+export async function wrapPfxKey(
   env: Env,
   plain: string,
 ): Promise<{ value: string; wrapped: boolean }> {
@@ -265,7 +311,7 @@ async function wrapPfxKey(
   return { value: `gcm:${toBase64(iv)}:${toBase64(ct)}`, wrapped: true };
 }
 
-async function unwrapPfxKey(
+export async function unwrapPfxKey(
   env: Env,
   stored: string,
   wrapped: boolean,
@@ -350,7 +396,7 @@ export function timingSafeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-function fmtBytes(n: number): string {
+export function fmtBytes(n: number): string {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KiB`;
   return `${(n / 1024 / 1024).toFixed(2)} MiB`;
@@ -359,6 +405,7 @@ function fmtBytes(n: number): string {
 function metaOf(fingerprint: string, rec: CardVaultRecord): CardVaultMeta {
   return {
     fingerprint,
+    mode: "key",
     createdAt: rec.createdAt,
     size: rec.size,
     sha256: rec.sha256,
@@ -395,21 +442,7 @@ export interface SealVaultResult extends CardVaultMeta {
 export async function sealVault(p: SealVaultParams): Promise<SealVaultResult> {
   const { env, clientPubB64, pfx, pfxKey } = p;
 
-  const max = resolveMaxBytes(env);
-  if (!pfx || pfx.length === 0) {
-    throw new CardVaultError("上传的 PFX 文件为空");
-  }
-  if (pfx.length > max) {
-    throw new CardVaultError(
-      `PFX 文件过大：${fmtBytes(pfx.length)}，上限 ${fmtBytes(max)}（可通过 CARD_MAX_BYTES 调整）`,
-    );
-  }
-  // PKCS#12 为 DER 编码，首字节必须是 SEQUENCE(0x30)：拦截误传的 .crt/.pem/.p7b
-  if (pfx[0] !== 0x30) {
-    throw new CardVaultError(
-      "上传内容不是有效的 PKCS#12 (PFX/P12)：DER 首字节应为 0x30，请确认文件类型",
-    );
-  }
+  validatePfx(env, pfx);
 
   const label = (p.label || "").trim().slice(0, MAX_LABEL_LEN) || undefined;
 
@@ -497,7 +530,11 @@ export async function vaultStatus(
   return hit ? metaOf(hit.fingerprint, hit.record) : null;
 }
 
-/** 按指纹删除记录，返回是否真的删掉了 */
+/**
+ * 按指纹删除记录，返回是否真的删掉了。
+ *
+ * 同时兼容两种模式的 key（v1 = 传输密钥，v2 = 取件码）。
+ */
 export async function deleteVaultByFingerprint(
   env: Env,
   fingerprint: string,
@@ -507,10 +544,14 @@ export async function deleteVaultByFingerprint(
     throw new CardVaultError("指纹格式非法（应为 64 位十六进制 SHA-256）");
   }
   const kv = resolveCardKv(env);
-  const key = cardKvKey(fp);
-  if ((await kv.get(key)) === null) return false;
-  await kv.delete(key);
-  return true;
+  let deleted = false;
+  for (const key of [`${CARD_PREFIX}${fp}`, `${CARD_CODE_PREFIX}${fp}`]) {
+    if ((await kv.get(key)) !== null) {
+      await kv.delete(key);
+      deleted = true;
+    }
+  }
+  return deleted;
 }
 
 /** 按客户端公钥删除记录 */
@@ -522,19 +563,75 @@ export async function deleteVaultByPubkey(
   return deleteVaultByFingerprint(env, await sha256Hex(raw));
 }
 
-/** 列出缓存的分发记录（仅元信息，按创建时间倒序） */
+/**
+ * 取件码模式（`card-code.ts`）的 KV 记录结构。
+ *
+ * 放在这里而非 `card-code.ts`，是为了让 `listVaults` / `deleteVaultByFingerprint`
+ * 能在不产生循环依赖的前提下统一处理两种模式。
+ */
+export interface CardCodeRecordShape {
+  v: 2;
+  mode: "code";
+  /** base64(AES-256-CBC(PBKDF2(取件码, salt), JSON 载荷)) */
+  vaults: string;
+  /** base64(16 字节随机盐) */
+  salt: string;
+  /** PBKDF2 迭代次数 */
+  iterations: number;
+  kdf: "pbkdf2-sha256";
+  createdAt: string;
+  /** 过期时间（ISO，空 = 永不过期） */
+  expiresAt: string;
+  /** 允许下发次数 */
+  maxUses: number;
+  /** 已下发次数 */
+  used: number;
+  size: number;
+  sha256: string;
+  label?: string;
+}
+
+/** 取件码模式的对外元信息 */
+export function codeMetaOf(
+  fingerprint: string,
+  rec: CardCodeRecordShape,
+): CardVaultMeta {
+  return {
+    fingerprint,
+    mode: "code",
+    createdAt: rec.createdAt,
+    size: rec.size,
+    sha256: rec.sha256,
+    label: rec.label,
+    expiresAt: rec.expiresAt || undefined,
+    maxUses: rec.maxUses,
+    used: rec.used,
+    remaining: Math.max(0, (rec.maxUses || 0) - (rec.used || 0)),
+  };
+}
+
+/**
+ * 列出缓存的分发记录（仅元信息，按创建时间倒序）。
+ *
+ * 覆盖传输密钥（`card:v1:`）与取件码（`card:v2:code:`）两种模式，按记录内的
+ * `v` 字段分派；损坏记录直接跳过。
+ */
 export async function listVaults(env: Env, limit = 200): Promise<CardVaultMeta[]> {
   const kv = resolveCardKv(env);
-  const page = await kv.list({ prefix: CARD_PREFIX, limit });
   const out: CardVaultMeta[] = [];
-  for (const k of page.keys) {
-    const raw = await kv.get(k.name);
-    if (!raw) continue;
-    try {
-      const record = JSON.parse(raw) as CardVaultRecord;
-      out.push(metaOf(k.name.slice(CARD_PREFIX.length), record));
-    } catch {
-      // 忽略损坏记录
+  for (const prefix of [CARD_PREFIX, CARD_CODE_PREFIX]) {
+    const page = await kv.list({ prefix, limit });
+    for (const k of page.keys) {
+      const raw = await kv.get(k.name);
+      if (!raw) continue;
+      try {
+        const rec = JSON.parse(raw) as CardVaultRecord | CardCodeRecordShape;
+        const fingerprint = k.name.slice(prefix.length);
+        if (rec.v === 2) out.push(codeMetaOf(fingerprint, rec as CardCodeRecordShape));
+        else out.push(metaOf(fingerprint, rec as CardVaultRecord));
+      } catch {
+        // 忽略损坏记录
+      }
     }
   }
   out.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));

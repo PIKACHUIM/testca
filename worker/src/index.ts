@@ -13,8 +13,11 @@
  *   POST     /ocsp             —— OCSP 请求
  *   GET      /ocsp/:b64        —— OCSP 请求（Base64URL）
  *   POST     /revoke           —— 基于私钥的吊销
- *   GET/POST /card/get/cert    —— 智能卡证书下发（取回加密 PFX）
+ *   GET/POST /card/get/cert    —— 智能卡证书下发（传输密钥 或 取件码）
  *   POST     /card/put/cert    —— 智能卡证书上传（加密后存 KV）
+ *   GET/POST /card/get/code    —— 取件码（自协商）模式下发
+ *   POST     /card/put/code    —— 取件码模式上传（生成有效期 / 次数受限的口令）
+ *   GET/POST /card/code/status —— 查询取件码剩余次数与有效期
  *   GET      /card/web/cert    —— 智能卡证书上传页面
  *   GET      /api/health       —— 健康检查
  *
@@ -67,7 +70,12 @@ app.get("/api/health", (c) =>
       "/card/get/cert",
       "/card/put/cert",
       "/card/status",
+      "/card/get/code",
+      "/card/put/code",
+      "/card/code/status",
       "/card/web/cert",
+      "/card/admin/login",
+      "/card/admin/session",
       "/card/admin/list",
       "/card/admin/delete",
     ],
